@@ -77,7 +77,8 @@ var PARTIES=[
  {name:'mohsin Bhai Garden Paratwada',short:'Mohsin Bhai',phone:'919970884996',entries:[
   {date:'12 Oct 2026',type:'opening',amount:5000,note:'From Vyapar (last activity 1 Oct 2026)'}]},
  {name:'Shoeb bhai opplo footwear',short:'Shoeb Bhai',phone:'919826902952',entries:[
-  {date:'12 Oct 2026',type:'opening',amount:68170,note:'From Vyapar (last activity 28 Sep 2026)'}]}
+  {date:'12 Oct 2026',type:'opening',amount:68170,note:'From Vyapar (last activity 28 Sep 2026)'},
+  {date:'12 Oct 2026',type:'payment',amount:8170,note:'Payment done'}]}
 ];
 // =================== END OF DATA - DO NOT EDIT BELOW =====================
 var L={opening:'Opening Balance',maal:'Goods Received',payment:'Payment Made',kata:'Adjusted'};
@@ -104,7 +105,7 @@ function party(p,i){
  return '<div class="card"><details class="party"><summary><span class="p-name"><span class="num">'+(i+1)+'</span>'+esc(p.name)+'</span><span class="p-bal"><small>To Pay</small><b class="'+(b>0?'due':'clear')+'">'+inr(b)+'</b>'+(b===0?'<span class="pill">\u2713 CLEAR</span>':'')+'</span></summary><div class="p-body"><div class="p-sum"><div><small>Goods Received</small><b>'+inr(sum(p.entries,['opening','maal']))+'</b></div><div><small>Payment Made</small><b>'+inr(sum(p.entries,['payment']))+'</b></div><div><small>Adjusted</small><b>'+inr(sum(p.entries,['kata']))+'</b></div><div><small>Balance</small><b>'+inr(b)+'</b></div></div><ol class="hist">'+h+'</ol></div></details>'+w+'</div>'
 }
 var T=0;PARTIES.forEach(function(p){T+=bal(p.entries)});
-document.getElementById('app').innerHTML='<h1>RBH KHATA BOOK</h1><p class="upd">Updated: '+UPDATED+'</p><section class="total"><small>Total Payable</small><b>'+inr(T)+'</b></section><div class="parties">'+PARTIES.map(party).join('')+'</div><p class="ver">v7</p>';
+document.getElementById('app').innerHTML='<h1>RBH KHATA BOOK</h1><p class="upd">Updated: '+UPDATED+'</p><section class="total"><small>Total Payable</small><b>'+inr(T)+'</b></section><div class="parties">'+PARTIES.map(party).join('')+'</div><p class="ver">v8</p>';
 document.addEventListener('click',function(ev){
  var b=ev.target.closest&&ev.target.closest('.bill');if(!b)return;
  var n=b.nextElementSibling;
