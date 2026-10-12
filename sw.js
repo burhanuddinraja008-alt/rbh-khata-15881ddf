@@ -1,6 +1,6 @@
-var V='v3';
+var V='v4';
 var C='rbh-khata-'+V;
-var FILES=['./','index.html','manifest.json','1-icon-192.png','2-icon-512.png'];
+var FILES=['./','index.html','manifest.json','icon-192.png','icon-512.png'];
 self.addEventListener('install',function(e){self.skipWaiting();e.waitUntil(caches.open(C).then(function(c){return c.addAll(FILES.map(function(f){return new Request(f,{cache:'reload'})}))}))});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(function(x){return x!==C}).map(function(x){return caches.delete(x)}))}).then(function(){return self.clients.claim()}))});
 self.addEventListener('fetch',function(e){
