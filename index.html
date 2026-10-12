@@ -29,7 +29,8 @@ h1{font-size:28px;margin:8px 0 4px;letter-spacing:.5px}
 .p-name{font-size:18px;font-weight:700;line-height:1.25;word-break:break-word}
 .p-bal small,.p-sum small{display:block;font-size:14px;color:#666}
 .p-bal b{font-size:26px;font-weight:800}
-.due{color:#b3261e}.clear{color:#1b7a3d}
+.due{color:#b3261e}.clear{color:#1b7a3d;font-weight:800}
+.pill{display:inline-block;margin-left:8px;padding:3px 10px;border-radius:999px;background:#dff3e5;color:#1b7a3d;border:1px solid #1b7a3d;font-size:13px;font-weight:800;letter-spacing:.5px;vertical-align:middle}
 .party summary::after{content:"Tap for full history \25BE";font-size:14px;color:#666}
 .party[open] summary::after{content:"Close \25B4"}
 .p-body{padding:0 16px 16px;border-top:1px solid #eee}
@@ -85,11 +86,11 @@ function sg(e){return e.type==='payment'||e.type==='kata'?-e.amount:e.amount}
 function bal(es){var s=0;es.forEach(function(e){s+=sg(e)});return s}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function sum(es,t){var s=0;es.forEach(function(e){if(t.indexOf(e.type)>-1)s+=e.amount});return s}
-var SIG='\n\nFrom: Raja Boot House, Dharni\n(Authorised Signature)\nBurhanuddin Adnan Hussain';
+var SIG='\n\nFrom: Raja Boot House, Dharni';
 function wa(p,txt){return 'https://wa.me/'+p.phone.replace(/\D/g,'')+'?text='+encodeURIComponent(txt)}
 function party(p,i){
  var b=bal(p.entries),run=0,rows=p.entries.map(function(e){run+=sg(e);return{e:e,r:run}}).reverse();
- var h=rows.map(function(x){var e=x.e;return '<li><div class="h-top"><span>'+esc(e.date)+'</span><span class="h-type">'+L[e.type]+'</span></div><div class="h-amt">'+(sg(e)<0?'\u2212 ':'')+inr(e.amount)+'</div><div class="h-bal">Balance: <b>'+inr(x.r)+'</b></div>'+(e.note?'<div class="h-note">'+esc(e.note)+'</div>':'')+(e.bill?'<button class="btn bill" data-src="bills/'+esc(e.bill)+'">View Bill</button>':'')+'</li>'}).join('');
+ var h=rows.map(function(x){var e=x.e;return '<li><div class="h-top"><span>'+esc(e.date)+'</span><span class="h-type">'+L[e.type]+'</span></div><div class="h-amt">'+(sg(e)<0?'\u2212 ':'')+inr(e.amount)+'</div><div class="h-bal">Balance: <b'+(x.r===0?' class="clear"':'')+'>'+inr(x.r)+'</b>'+(x.r===0?' <span class="pill">\u2713 CLEAR</span>':'')+'</div>'+(e.note?'<div class="h-note">'+esc(e.note)+'</div>':'')+(e.bill?'<button class="btn bill" data-src="bills/'+esc(e.bill)+'">View Bill</button>':'')+'</li>'}).join('');
  var w='';
  if(p.phone){
   w='<div class="wrow">';
@@ -100,10 +101,10 @@ function party(p,i){
   w+='<form class="amt" hidden data-i="'+i+'"><input type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Amount \u20B9" aria-label="Amount"><button class="btn" type="submit">Go</button><p class="amsg" hidden></p></form>';
   w+='</div>';
  }
- return '<div class="card"><details class="party"><summary><span class="p-name"><span class="num">'+(i+1)+'</span>'+esc(p.name)+'</span><span class="p-bal"><small>To Pay</small><b class="'+(b>0?'due':'clear')+'">'+inr(b)+'</b></span></summary><div class="p-body"><div class="p-sum"><div><small>Goods Received</small><b>'+inr(sum(p.entries,['opening','maal']))+'</b></div><div><small>Payment Made</small><b>'+inr(sum(p.entries,['payment']))+'</b></div><div><small>Adjusted</small><b>'+inr(sum(p.entries,['kata']))+'</b></div><div><small>Balance</small><b>'+inr(b)+'</b></div></div><ol class="hist">'+h+'</ol></div></details>'+w+'</div>'
+ return '<div class="card"><details class="party"><summary><span class="p-name"><span class="num">'+(i+1)+'</span>'+esc(p.name)+'</span><span class="p-bal"><small>To Pay</small><b class="'+(b>0?'due':'clear')+'">'+inr(b)+'</b>'+(b===0?'<span class="pill">\u2713 CLEAR</span>':'')+'</span></summary><div class="p-body"><div class="p-sum"><div><small>Goods Received</small><b>'+inr(sum(p.entries,['opening','maal']))+'</b></div><div><small>Payment Made</small><b>'+inr(sum(p.entries,['payment']))+'</b></div><div><small>Adjusted</small><b>'+inr(sum(p.entries,['kata']))+'</b></div><div><small>Balance</small><b>'+inr(b)+'</b></div></div><ol class="hist">'+h+'</ol></div></details>'+w+'</div>'
 }
 var T=0;PARTIES.forEach(function(p){T+=bal(p.entries)});
-document.getElementById('app').innerHTML='<h1>RBH KHATA BOOK</h1><p class="upd">Updated: '+UPDATED+'</p><section class="total"><small>Total Payable</small><b>'+inr(T)+'</b></section><div class="parties">'+PARTIES.map(party).join('')+'</div><p class="ver">v6</p>';
+document.getElementById('app').innerHTML='<h1>RBH KHATA BOOK</h1><p class="upd">Updated: '+UPDATED+'</p><section class="total"><small>Total Payable</small><b>'+inr(T)+'</b></section><div class="parties">'+PARTIES.map(party).join('')+'</div><p class="ver">v7</p>';
 document.addEventListener('click',function(ev){
  var b=ev.target.closest&&ev.target.closest('.bill');if(!b)return;
  var n=b.nextElementSibling;
