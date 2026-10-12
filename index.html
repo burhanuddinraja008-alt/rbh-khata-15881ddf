@@ -15,6 +15,11 @@ body{margin:0;background:#faf9f7;color:#1a1a1a;font-family:-apple-system,BlinkMa
 main{max-width:640px;margin:0 auto;padding:20px 16px 40px;padding-top:max(20px,env(safe-area-inset-top))}
 h1{font-size:28px;margin:8px 0 4px;letter-spacing:.5px}
 .ver{margin:24px 0 8px;text-align:center;color:#999;font-size:12px}
+.ver a{color:#666;padding:10px 6px}
+.lock{padding:40px 8px;text-align:center}
+.lock input{width:100%;height:50px;margin:14px 0;padding:0 14px;border:2px solid #cfcfcf;border-radius:12px;font-size:20px;text-align:center;font-family:inherit}
+.lock .btn{width:100%;line-height:50px;min-height:50px}
+.lock .err{color:#b3261e;font-weight:700;min-height:22px;margin:0}
 .upd{margin:0 0 16px;color:#666;font-size:15px}
 .total{background:#111;color:#fff;border-radius:16px;padding:18px 20px;margin:0 0 16px;border:1px solid #b8923a}
 .total small{display:block;font-size:15px;opacity:.8}
@@ -61,29 +66,8 @@ h1{font-size:28px;margin:8px 0 4px;letter-spacing:.5px}
 </style></head>
 <body><main id="app"></main>
 <script>
-// ===================== DATA - CHANGE ONLY THIS BLOCK =====================
-// Add a line to a party's `entries` for every new entry (newest last).
-//   type: 'opening' | 'maal' (Goods Received) | 'payment' (Payment Made) | 'kata' (Adjusted)
-//   sent:1 (optional) = supplier already messaged; leave it off on a NEW maal/payment entry to show the green SEND banner.
-//   amount: always a positive number. Balance is calculated automatically.
-//   note (optional), bill (optional): file name saved in the bills/ folder, e.g. bill:'shoeb-15oct.jpg'
-// phone: WhatsApp number with country code, digits only, e.g. '919876543210'. Empty = reminder buttons hidden.
-// short: name used in the message ("Dear Shoeb Bhai").
-var UPDATED='12 Oct 2026';
-var PARTIES=[
- {name:'nuasad bhai Paragon Footwear',short:'Nuasad Bhai',phone:'919403490280',entries:[
-  {date:'12 Oct 2026',type:'opening',amount:0,note:'From Vyapar'}]},
- {name:'Amin Bhai Golden Boot House',short:'Amin Bhai',phone:'919579737030',entries:[
-  {date:'12 Oct 2026',type:'opening',amount:0,note:'From Vyapar'},
-  {date:'12 Oct 2026',type:'maal',amount:8750,sent:1,note:'Purana baaki (Vyapar se)'},
-  {date:'12 Oct 2026',type:'payment',amount:8750,sent:1,note:'Payment done - hisaab clear'}]},
- {name:'mohsin Bhai Garden Paratwada',short:'Mohsin Bhai',phone:'919970884996',entries:[
-  {date:'12 Oct 2026',type:'opening',amount:5000,note:'From Vyapar (last activity 1 Oct 2026)'}]},
- {name:'Shoeb bhai opplo footwear',short:'Shoeb Bhai',phone:'919826902952',entries:[
-  {date:'12 Oct 2026',type:'opening',amount:68170,note:'From Vyapar (last activity 28 Sep 2026)'},
-  {date:'12 Oct 2026',type:'payment',amount:8170,note:'Payment done'}]}
-];
-// =================== END OF DATA - DO NOT EDIT BELOW =====================
+var UPDATED='',PARTIES=[];
+var BLOB={s:'1Jo+29WzrAC6WSBpQ/r7QQ==',i:'STXd/UhNxYZIoAmR',c:'DgJHs+N7g61eJbrovRvxBKhpb1FvmnBI7i4h3I5fsvhQB/yZ3R9TAJpT6zO81Dp1uesuy9oEWGax+y6dMqYu04c5GSpgveny72zDcXJulpAGqj6BmtB4xVAWp35jD6HRFJprNwoeFy5dLNJX1s9z3rGH2QNTCYUdJbH4oLjdcPmSbuNpvx9pviX8rEsQGP4euLZ9JR3DJ/yC0qvM8ral6T6NJiJ/MVRwopH9n1Jv/s4srxC5+T+JBtGJgnI4JtAPrwGm5s4uC6p0GQSzNy8WM/X/pT51uEjOpKvKdn4bolwSgZvme03QaldwbnFOX7pJJ7AtIaQPlwYulFbRxSCBaTtEfTsvS0/+34JiDQ+jK9lWVwZYTw4bb3245jrbqam0anTmnHq+oTQt4PIeEyfY+9a4nhu0SbOrEjuShLuoawGvUh38dOBnB70qwPl87AvyHGuy7eZcs9QpVmYDew5tWonI79K6T6j/O46I6/u9icsXdS/F0n1ZMvY2FlsYi2D0lJCNIcGmJfE44hYk4U9kPXJWHLwFpbJEJzGYT3O1oEgJY4C5hxGJIMTJ+ICWbdgCgDnoi/3EmJUR+jSBrmyGod1IjyrzVorKXQE3YoqTrMgV1TW+r7zk56wBXJWJTtklqxxzMOvLX76ks/LVocI4Te5VrY0fEjd3pGYmXTg+PRIMVGQs1qBh3rNN0f8H8vAWHuh6MJxQ0NuCfI5wYhXR44LCIC4TrLOeDHd+QzOwAvtMh2j2fXHFN/ufcDWWJ8f51JtTMIFTjitOI42cTcYEa80Zk05MlOXuyGuiBu2c5tp4YH8DamEDx3rBMasmvIC4cVDGe3szwjQlv+AzkMLNR5mKjuEkFdXrpTdFzHBIj/tkdrTa8r9WssPTvCSGQj4D58+zNC9Idu4lhpZMQDXiUNxN2dYVqFiabrl+TiPWu2/r6SvCZJ3DIWRlhHGAHXdMzjfI01gJ+zkaU+zkjWjtMxseKOzT2DHRhKNgWecuA9XsaA0mBpGh9DRrWsCrdqcsrINWWhiAV+gdQaGfNvQZyogJvon4JqHJJqE9xiu2Kt+jRF2OmNozomSbNaVXS8b4+dfNHhJopur8rjO0u/GWNztLMcn3TB0Ehi/iGr1jWr8/pQxKqXhZLJ1rkUDlHgKje6ONG2JhTIXjoyGKiinKY1XP+lDbDvmsvbq93HNXvyga8XxsgRKUl0sxvPy/Fb/GVQIBt5I9jQz8PFph1R1Gc5QtgoSkMD2l3WaaedD1JTIN9C0oODmvjbg9y9Cvk00KqabMKHCD3sEbfjYh0q7JQX/bU19zlPHsGH4VQpP691MXfbz+CEfvs+VU8GqfQplPzijtyXdxTdpDYQhqnOaCldvXKVVLCc7wSATscyeLQjX64A=='};
 var L={opening:'Opening Balance',maal:'Goods Received',payment:'Payment Made',kata:'Adjusted'};
 function inr(n){return '\u20B9'+n.toLocaleString('en-IN')}
 function sg(e){return e.type==='payment'||e.type==='kata'?-e.amount:e.amount}
@@ -119,8 +103,10 @@ function party(p,i){
  }
  return '<div class="card">'+(p.phone?pend(p,i):'')+'<details class="party"><summary><span class="p-name"><span class="num">'+(i+1)+'</span>'+esc(p.name)+'</span><span class="p-bal"><small>To Pay</small><b class="'+(b>0?'due':'clear')+'">'+inr(b)+'</b>'+(b===0?'<span class="pill">\u2713 CLEAR</span>':'')+'</span></summary><div class="p-body"><div class="p-sum"><div><small>Goods Received</small><b>'+inr(sum(p.entries,['opening','maal']))+'</b></div><div><small>Payment Made</small><b>'+inr(sum(p.entries,['payment']))+'</b></div><div><small>Adjusted</small><b>'+inr(sum(p.entries,['kata']))+'</b></div><div><small>Balance</small><b>'+inr(b)+'</b></div></div><ol class="hist">'+h+'</ol></div></details>'+w+'</div>'
 }
+function render(){
 var T=0;PARTIES.forEach(function(p){T+=bal(p.entries)});
-document.getElementById('app').innerHTML='<h1>RBH KHATA BOOK</h1><p class="upd">Updated: '+UPDATED+'</p><section class="total"><small>Total Payable</small><b>'+inr(T)+'</b></section><div class="parties">'+PARTIES.map(party).join('')+'</div><p class="ver">v9</p>';
+document.getElementById('app').innerHTML='<h1>RBH KHATA BOOK</h1><p class="upd">Updated: '+UPDATED+'</p><section class="total"><small>Total Payable</small><b>'+inr(T)+'</b></section><div class="parties">'+PARTIES.map(party).join('')+'</div><p class="ver">v10 &middot; <a href="#" id="lk">Lock</a></p>';
+}
 document.addEventListener('click',function(ev){
  var b=ev.target.closest&&ev.target.closest('.bill');if(!b)return;
  var n=b.nextElementSibling;
@@ -147,6 +133,20 @@ document.addEventListener('submit',function(ev){
  else txt='Dear '+p.short+', we have received a new purchase of '+inr(n)+' from you. Total outstanding: '+inr(b+n)+'.'+SIG;
  window.open(wa(p,txt),'_blank');
 });
+
+var IT=300000;
+function b2u(b){var s=atob(b),a=new Uint8Array(s.length);for(var i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a}
+function u2b(a){var s='';for(var i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s)}
+function dec(raw){return crypto.subtle.importKey('raw',raw,'AES-GCM',false,['decrypt']).then(function(k){return crypto.subtle.decrypt({name:'AES-GCM',iv:b2u(BLOB.i)},k,b2u(BLOB.c))}).then(function(buf){return JSON.parse(new TextDecoder().decode(buf))})}
+function open_(D){UPDATED=D.u;PARTIES=D.p;render();var lk=document.getElementById('lk');if(lk)lk.addEventListener('click',function(e){e.preventDefault();try{localStorage.removeItem('rbh_k')}catch(x){}location.reload()})}
+function lockScreen(){
+ document.getElementById('app').innerHTML='<h1>RBH KHATA BOOK</h1><form class="lock" id="lf"><p>Enter PIN to open</p><input id="pin" type="password" autocomplete="off" aria-label="PIN"><p class="err" id="err"></p><button class="btn" type="submit">Unlock</button><p class="ver">v10</p></form>';
+ var f=document.getElementById('lf'),pin=document.getElementById('pin'),err=document.getElementById('err');pin.focus();
+ f.addEventListener('submit',function(e){e.preventDefault();var v=pin.value;if(!v)return;err.textContent='Unlocking...';
+  crypto.subtle.importKey('raw',new TextEncoder().encode(v),'PBKDF2',false,['deriveBits']).then(function(km){return crypto.subtle.deriveBits({name:'PBKDF2',salt:b2u(BLOB.s),iterations:IT,hash:'SHA-256'},km,256)}).then(function(bits){var raw=new Uint8Array(bits);return dec(raw).then(function(D){try{localStorage.setItem('rbh_k',u2b(raw))}catch(x){}open_(D)},function(){err.textContent='Wrong PIN';pin.value='';pin.focus()})}).catch(function(){err.textContent='Could not unlock'})})}
+(function(){var k=null;try{k=localStorage.getItem('rbh_k')}catch(x){}
+ if(!k||!window.crypto||!crypto.subtle){lockScreen();return}
+ dec(b2u(k)).then(open_,lockScreen)})();
 if('serviceWorker' in navigator){
  var had=!!navigator.serviceWorker.controller,rl=false;
  navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=true;location.reload()}had=true});
