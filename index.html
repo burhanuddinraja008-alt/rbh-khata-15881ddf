@@ -49,6 +49,9 @@ h1{font-size:28px;margin:8px 0 4px;letter-spacing:.5px}
 .amt[hidden]{display:none}
 .amt input{flex:1;min-width:0;height:44px;padding:0 12px;border:2px solid #cfcfcf;border-radius:10px;font-size:18px;font-family:inherit}
 .amt .btn{margin-top:0}
+.amt{flex-wrap:wrap}
+.amsg{flex-basis:100%;margin:0;color:#b3261e;font-size:14px;font-weight:700}
+.amsg[hidden]{display:none}
 .wrow{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px}
 .wrow .btn{margin:0}
 .bill-img{display:block;width:100%;height:auto;margin-top:10px;border-radius:8px}
@@ -91,13 +94,13 @@ function party(p,i){
   w+='<button class="btn wa" data-k="purchase" data-i="'+i+'">WhatsApp: Purchase</button>';
   w+='<button class="btn wa" data-k="payment" data-i="'+i+'">WhatsApp: Payment Done</button>';
   if(b>0)w+='<a class="btn wa" target="_blank" rel="noopener" href="'+esc(wa(p,'Dear '+p.short+', your pending payment of '+inr(b)+' will be cleared within this week. Thank you for your patience.'+SIG))+'">WhatsApp: Need Time</a>';
-  w+='<form class="amt" hidden data-i="'+i+'"><input type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Amount \u20B9" aria-label="Amount"><button class="btn" type="submit">Go</button></form>';
+  w+='<form class="amt" hidden data-i="'+i+'"><input type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Amount \u20B9" aria-label="Amount"><button class="btn" type="submit">Go</button><p class="amsg" hidden></p></form>';
   w+='</div>';
  }
  return '<div class="card"><details class="party"><summary><span class="p-name"><span class="num">'+(i+1)+'</span>'+esc(p.name)+'</span><span class="p-bal"><small>To Pay</small><b class="'+(b>0?'due':'clear')+'">'+inr(b)+'</b></span></summary><div class="p-body"><div class="p-sum"><div><small>Goods Received</small><b>'+inr(sum(p.entries,['opening','maal']))+'</b></div><div><small>Payment Made</small><b>'+inr(sum(p.entries,['payment']))+'</b></div><div><small>Adjusted</small><b>'+inr(sum(p.entries,['kata']))+'</b></div><div><small>Balance</small><b>'+inr(b)+'</b></div></div><ol class="hist">'+h+'</ol></div></details>'+w+'</div>'
 }
 var T=0;PARTIES.forEach(function(p){T+=bal(p.entries)});
-document.getElementById('app').innerHTML='<h1>RBH KHATA BOOK</h1><p class="upd">Updated: '+UPDATED+'</p><section class="total"><small>Total Payable</small><b>'+inr(T)+'</b></section><div class="parties">'+PARTIES.map(party).join('')+'</div><p class="ver">v4</p>';
+document.getElementById('app').innerHTML='<h1>RBH KHATA BOOK</h1><p class="upd">Updated: '+UPDATED+'</p><section class="total"><small>Total Payable</small><b>'+inr(T)+'</b></section><div class="parties">'+PARTIES.map(party).join('')+'</div><p class="ver">v5</p>';
 document.addEventListener('click',function(ev){
  var b=ev.target.closest&&ev.target.closest('.bill');if(!b)return;
  var n=b.nextElementSibling;
@@ -115,8 +118,10 @@ document.addEventListener('submit',function(ev){
  var f=ev.target;if(!f.classList.contains('amt'))return;ev.preventDefault();
  var p=PARTIES[+f.getAttribute('data-i')],k=f.getAttribute('data-k'),inp=f.querySelector('input');
  var n=parseInt(inp.value.replace(/[^0-9]/g,''),10);
- if(!n||n<1){inp.focus();return}
- var b=bal(p.entries),txt;
+ var b=bal(p.entries),txt,mg=f.querySelector('.amsg');mg.hidden=true;
+ function bad(m){mg.textContent=m;mg.hidden=false;inp.focus()}
+ if(!n||n<1)return bad('Enter an amount greater than \u20B90');
+ if(k==='payment'&&n>b)return bad('Payment balance ('+inr(b)+') se zyada nahi ho sakti');
  if(k==='payment')txt='Dear '+p.short+', '+inr(n)+' has been paid towards your account today. Remaining balance: '+inr(b-n)+'. Thank you.'+SIG;
  else txt='Dear '+p.short+', we have received a new purchase of '+inr(n)+' from you. Total outstanding: '+inr(b+n)+'.'+SIG;
  window.open(wa(p,txt),'_blank');
