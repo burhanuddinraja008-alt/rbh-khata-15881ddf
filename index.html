@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RBH KHATA BOOK</title>
+<meta name="theme-color" content="#111111">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="RBH KHATA BOOK">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="1-icon-192.png">
+<link rel="apple-touch-icon" href="1-icon-192.png">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#faf9f7;color:#1a1a1a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 40px;padding-top:max(20px,env(safe-area-inset-top))}
+h1{font-size:28px;margin:8px 0 4px;letter-spacing:.5px}
+.upd{margin:0 0 16px;color:#666;font-size:15px}
+.total{background:#111;color:#fff;border-radius:16px;padding:18px 20px;margin:0 0 16px;border:1px solid #b8923a}
+.total small{display:block;font-size:15px;opacity:.8}
+.total b{font-size:34px;font-weight:800;color:#e6c26a}
+.parties{display:flex;flex-direction:column;gap:12px}
+.party{border:1px solid #ddd;border-radius:16px;background:#fff}
+.party summary{list-style:none;cursor:pointer;display:flex;flex-direction:column;gap:8px;padding:16px;min-height:44px}
+.party summary::-webkit-details-marker{display:none}
+.p-name{font-size:18px;font-weight:700;line-height:1.25;word-break:break-word}
+.p-bal small,.p-sum small{display:block;font-size:14px;color:#666}
+.p-bal b{font-size:26px;font-weight:800}
+.due{color:#b3261e}.clear{color:#1b7a3d}
+.party summary::after{content:"Tap for full history \25BE";font-size:14px;color:#666}
+.party[open] summary::after{content:"Close \25B4"}
+.p-body{padding:0 16px 16px;border-top:1px solid #eee}
+.p-sum{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 0}
+.p-sum b{font-size:18px;font-weight:700}
+.hist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.hist li{background:#f6f4ef;border-radius:12px;padding:12px 14px}
+.h-top{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:#555}
+.h-type{font-weight:700;color:#111}
+.h-amt{font-size:22px;font-weight:800;margin-top:4px}
+.h-bal{font-size:15px;margin-top:2px}
+.h-note{font-size:14px;color:#666;margin-top:4px}
+.btn{display:inline-block;margin-top:8px;min-height:44px;line-height:44px;padding:0 18px;border-radius:10px;background:#111;color:#fff;text-decoration:none;font-weight:700;border:0;font-size:16px;font-family:inherit}
+.wa{background:#1b7a3d}
+.wrow{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px}
+.wrow .btn{margin:0}
+.bill-img{display:block;width:100%;height:auto;margin-top:10px;border-radius:8px}
+</style></head>
+<body><main id="app"></main>
+<script>
+// ===================== DATA - CHANGE ONLY THIS BLOCK =====================
+// Add a line to a party's `entries` for every new entry (newest last).
+//   type: 'opening' | 'maal' (Goods Received) | 'payment' (Payment Made) | 'kata' (Adjusted)
+//   amount: always a positive number. Balance is calculated automatically.
+//   note (optional), bill (optional): file name saved in the bills/ folder, e.g. bill:'shoeb-15oct.jpg'
+// phone: WhatsApp number with country code, digits only, e.g. '919876543210'. Empty = reminder buttons hidden.
+// short: name used in the message ("Dear Shoeb Bhai").
+var UPDATED='12 Oct 2026';
+var PARTIES=[
+ {name:'nuasad bhai Paragon Footwear',short:'Nuasad Bhai',phone:'919403490280',entries:[
+  {date:'12 Oct 2026',type:'opening',amount:0,note:'From Vyapar'}]},
+ {name:'Amin Bhai Golden Boot House',short:'Amin Bhai',phone:'919579737030',entries:[
+  {date:'12 Oct 2026',type:'opening',amount:0,note:'From Vyapar'}]},
+ {name:'mohsin Bhai Garden Paratwada',short:'Mohsin Bhai',phone:'919970884996',entries:[
+  {date:'12 Oct 2026',type:'opening',amount:5000,note:'From Vyapar (last activity 1 Oct 2026)'}]},
+ {name:'Shoeb bhai opplo footwear',short:'Shoeb Bhai',phone:'919826902952',entries:[
+  {date:'12 Oct 2026',type:'opening',amount:68170,note:'From Vyapar (last activity 28 Sep 2026)'}]}
+];
+// =================== END OF DATA - DO NOT EDIT BELOW =====================
+var L={opening:'Opening Balance',maal:'Goods Received',payment:'Payment Made',kata:'Adjusted'};
+function inr(n){return '\u20B9'+n.toLocaleString('en-IN')}
+function sg(e){return e.type==='payment'||e.type==='kata'?-e.amount:e.amount}
+function bal(es){var s=0;es.forEach(function(e){s+=sg(e)});return s}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function sum(es,t){var s=0;es.forEach(function(e){if(t.indexOf(e.type)>-1)s+=e.amount});return s}
+function wa(p,txt){return 'https://wa.me/'+p.phone.replace(/\D/g,'')+'?text='+encodeURIComponent(txt)}
+function party(p,i){
+ var b=bal(p.entries),run=0,rows=p.entries.map(function(e){run+=sg(e);return{e:e,r:run}}).reverse();
+ var h=rows.map(function(x){var e=x.e;return '<li><div class="h-top"><span>'+esc(e.date)+'</span><span class="h-type">'+L[e.type]+'</span></div><div class="h-amt">'+(sg(e)<0?'\u2212 ':'')+inr(e.amount)+'</div><div class="h-bal">Balance: <b>'+inr(x.r)+'</b></div>'+(e.note?'<div class="h-note">'+esc(e.note)+'</div>':'')+(e.bill?'<button class="btn bill" data-src="bills/'+esc(e.bill)+'">View Bill</button>':'')+'</li>'}).join('');
+ var w='';
+ if(p.phone){
+  var last=null,lm=null;p.entries.forEach(function(e){if(e.type==='payment')last=e;if(e.type==='maal')lm=e});
+  w='<div class="wrow">';
+  if(lm)w+='<a class="btn wa" target="_blank" rel="noopener" href="'+esc(wa(p,'Dear '+p.short+', we have received a new purchase of '+inr(lm.amount)+' from you. Total outstanding: '+inr(b)+'. - Raja Boot House, Dharni'))+'">WhatsApp: Purchase</a>';
+  if(last)w+='<a class="btn wa" target="_blank" rel="noopener" href="'+esc(wa(p,'Dear '+p.short+', '+inr(last.amount)+' has been paid towards your account today. Remaining balance: '+inr(b)+'. Thank you. - Raja Boot House, Dharni'))+'">WhatsApp: Payment Made</a>';
+  if(b>0)w+='<a class="btn wa" target="_blank" rel="noopener" href="'+esc(wa(p,'Dear '+p.short+', your pending payment of '+inr(b)+' will be cleared within this week. Thank you for your patience. - Raja Boot House, Dharni'))+'">WhatsApp: Need Time</a>';
+  w+='</div>';
+ }
+ return '<details class="party"><summary><span class="p-name">'+esc(p.name)+'</span><span class="p-bal"><small>To Pay</small><b class="'+(b>0?'due':'clear')+'">'+inr(b)+'</b></span></summary><div class="p-body"><div class="p-sum"><div><small>Goods Received</small><b>'+inr(sum(p.entries,['opening','maal']))+'</b></div><div><small>Payment Made</small><b>'+inr(sum(p.entries,['payment']))+'</b></div><div><small>Adjusted</small><b>'+inr(sum(p.entries,['kata']))+'</b></div><div><small>Balance</small><b>'+inr(b)+'</b></div></div>'+w+'<ol class="hist">'+h+'</ol></div></details>'
+}
+var T=0;PARTIES.forEach(function(p){T+=bal(p.entries)});
+document.getElementById('app').innerHTML='<h1>RBH KHATA BOOK</h1><p class="upd">Updated: '+UPDATED+'</p><section class="total"><small>Total Payable</small><b>'+inr(T)+'</b></section><div class="parties">'+PARTIES.map(party).join('')+'</div>';
+document.addEventListener('click',function(ev){
+ var b=ev.target.closest&&ev.target.closest('.bill');if(!b)return;
+ var n=b.nextElementSibling;
+ if(n&&n.tagName==='IMG'){n.remove();b.textContent='View Bill';return}
+ var i=document.createElement('img');i.className='bill-img';i.alt='Bill';i.src=b.getAttribute('data-src');b.after(i);b.textContent='Hide Bill'});
+if('serviceWorker' in navigator){
+ navigator.serviceWorker.register('sw.js').catch(function(){});
+ navigator.serviceWorker.addEventListener('message',function(m){if(m.data==='updated'&&!sessionStorage.getItem('r')){sessionStorage.setItem('r','1');location.reload()}else if(m.data==='updated'){sessionStorage.removeItem('r')}});
+}
+</script></body></html>
