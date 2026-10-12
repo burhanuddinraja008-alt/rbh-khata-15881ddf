@@ -19,7 +19,10 @@ h1{font-size:28px;margin:8px 0 4px;letter-spacing:.5px}
 .total small{display:block;font-size:15px;opacity:.8}
 .total b{font-size:34px;font-weight:800;color:#e6c26a}
 .parties{display:flex;flex-direction:column;gap:12px}
-.party{border:1px solid #ddd;border-radius:16px;background:#fff}
+.card{border:2px solid #cfcfcf;border-radius:18px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08);overflow:hidden}
+.party{background:#fff}
+.card>.wrow{margin:0;padding:0 16px 16px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;margin-right:8px;border-radius:50%;background:#111;color:#fff;font-size:14px;font-weight:700;vertical-align:middle}
 .party summary{list-style:none;cursor:pointer;display:flex;flex-direction:column;gap:8px;padding:16px;min-height:44px}
 .party summary::-webkit-details-marker{display:none}
 .p-name{font-size:18px;font-weight:700;line-height:1.25;word-break:break-word}
@@ -80,11 +83,11 @@ function party(p,i){
   var last=null,lm=null;p.entries.forEach(function(e){if(e.type==='payment')last=e;if(e.type==='maal')lm=e});
   w='<div class="wrow">';
   if(lm)w+='<a class="btn wa" target="_blank" rel="noopener" href="'+esc(wa(p,'Dear '+p.short+', we have received a new purchase of '+inr(lm.amount)+' from you. Total outstanding: '+inr(b)+'. - Raja Boot House, Dharni'))+'">WhatsApp: Purchase</a>';
-  if(last)w+='<a class="btn wa" target="_blank" rel="noopener" href="'+esc(wa(p,'Dear '+p.short+', '+inr(last.amount)+' has been paid towards your account today. Remaining balance: '+inr(b)+'. Thank you. - Raja Boot House, Dharni'))+'">WhatsApp: Payment Made</a>';
+  if(last)w+='<a class="btn wa" target="_blank" rel="noopener" href="'+esc(wa(p,'Dear '+p.short+', '+inr(last.amount)+' has been paid towards your account today. Remaining balance: '+inr(b)+'. Thank you. - Raja Boot House, Dharni'))+'">WhatsApp: Payment Done</a>';
   if(b>0)w+='<a class="btn wa" target="_blank" rel="noopener" href="'+esc(wa(p,'Dear '+p.short+', your pending payment of '+inr(b)+' will be cleared within this week. Thank you for your patience. - Raja Boot House, Dharni'))+'">WhatsApp: Need Time</a>';
   w+='</div>';
  }
- return '<details class="party"><summary><span class="p-name">'+esc(p.name)+'</span><span class="p-bal"><small>To Pay</small><b class="'+(b>0?'due':'clear')+'">'+inr(b)+'</b></span></summary><div class="p-body"><div class="p-sum"><div><small>Goods Received</small><b>'+inr(sum(p.entries,['opening','maal']))+'</b></div><div><small>Payment Made</small><b>'+inr(sum(p.entries,['payment']))+'</b></div><div><small>Adjusted</small><b>'+inr(sum(p.entries,['kata']))+'</b></div><div><small>Balance</small><b>'+inr(b)+'</b></div></div>'+w+'<ol class="hist">'+h+'</ol></div></details>'
+ return '<div class="card"><details class="party"><summary><span class="p-name"><span class="num">'+(i+1)+'</span>'+esc(p.name)+'</span><span class="p-bal"><small>To Pay</small><b class="'+(b>0?'due':'clear')+'">'+inr(b)+'</b></span></summary><div class="p-body"><div class="p-sum"><div><small>Goods Received</small><b>'+inr(sum(p.entries,['opening','maal']))+'</b></div><div><small>Payment Made</small><b>'+inr(sum(p.entries,['payment']))+'</b></div><div><small>Adjusted</small><b>'+inr(sum(p.entries,['kata']))+'</b></div><div><small>Balance</small><b>'+inr(b)+'</b></div></div><ol class="hist">'+h+'</ol></div></details>'+w+'</div>'
 }
 var T=0;PARTIES.forEach(function(p){T+=bal(p.entries)});
 document.getElementById('app').innerHTML='<h1>RBH KHATA BOOK</h1><p class="upd">Updated: '+UPDATED+'</p><section class="total"><small>Total Payable</small><b>'+inr(T)+'</b></section><div class="parties">'+PARTIES.map(party).join('')+'</div>';
