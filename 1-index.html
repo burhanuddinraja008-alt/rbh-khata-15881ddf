@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RBH KHATA BOOK</title>
+<meta name="theme-color" content="#111111">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="RBH KHATA BOOK">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#faf9f7;color:#1a1a1a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 40px;padding-top:max(20px,env(safe-area-inset-top))}
+h1{font-size:28px;margin:8px 0 4px;letter-spacing:.5px}
+.ver{margin:24px 0 8px;text-align:center;color:#999;font-size:12px}
+.ver a{color:#666;padding:10px 6px}
+.lock{padding:40px 8px;text-align:center}
+.lock input{width:100%;height:50px;margin:14px 0;padding:0 14px;border:2px solid #cfcfcf;border-radius:12px;font-size:20px;text-align:center;font-family:inherit}
+.lock .btn{width:100%;line-height:50px;min-height:50px}
+.lock .err{color:#b3261e;font-weight:700;min-height:22px;margin:0}
+.upd{margin:0 0 16px;color:#666;font-size:15px}
+.total{background:#111;color:#fff;border-radius:16px;padding:18px 20px;margin:0 0 16px;border:1px solid #b8923a}
+.total small{display:block;font-size:15px;opacity:.8}
+.total b{font-size:34px;font-weight:800;color:#e6c26a}
+.parties{display:flex;flex-direction:column;gap:12px}
+.card{border:2px solid #cfcfcf;border-radius:18px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08);overflow:hidden}
+.party{background:#fff}
+.card>.wrow{margin:0;padding:0 16px 16px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;margin-right:8px;border-radius:50%;background:#111;color:#fff;font-size:14px;font-weight:700;vertical-align:middle}
+.party summary{list-style:none;cursor:pointer;display:flex;flex-direction:column;gap:8px;padding:16px;min-height:44px}
+.party summary::-webkit-details-marker{display:none}
+.p-name{font-size:18px;font-weight:700;line-height:1.25;word-break:break-word}
+.p-bal small,.p-sum small{display:block;font-size:14px;color:#666}
+.p-bal b{font-size:26px;font-weight:800}
+.due{color:#b3261e}.clear{color:#1b7a3d;font-weight:800}
+.pill{display:inline-block;margin-left:8px;padding:3px 10px;border-radius:999px;background:#dff3e5;color:#1b7a3d;border:1px solid #1b7a3d;font-size:13px;font-weight:800;letter-spacing:.5px;vertical-align:middle}
+.party summary::after{content:"Tap for full history \25BE";font-size:14px;color:#666}
+.party[open] summary::after{content:"Close \25B4"}
+.p-body{padding:0 16px 16px;border-top:1px solid #eee}
+.p-sum{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 0}
+.p-sum b{font-size:18px;font-weight:700}
+.hist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.hist li{background:#f6f4ef;border-radius:12px;padding:12px 14px}
+.h-top{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:#555}
+.h-type{font-weight:700;color:#111}
+.h-amt{font-size:22px;font-weight:800;margin-top:4px}
+.h-bal{font-size:15px;margin-top:2px}
+.h-note{font-size:14px;color:#666;margin-top:4px}
+.btn{display:inline-block;margin-top:8px;min-height:44px;line-height:44px;padding:0 18px;border-radius:10px;background:#111;color:#fff;text-decoration:none;font-weight:700;border:0;font-size:16px;font-family:inherit}
+.wa{background:#1b7a3d}
+.wa.on{outline:3px solid #111}
+.amt{display:flex;gap:8px;width:100%;margin-top:4px}
+.amt[hidden]{display:none}
+.amt input{flex:1;min-width:0;height:44px;padding:0 12px;border:2px solid #cfcfcf;border-radius:10px;font-size:18px;font-family:inherit}
+.amt .btn{margin-top:0}
+.amt{flex-wrap:wrap}
+.amsg{flex-basis:100%;margin:0;color:#b3261e;font-size:14px;font-weight:700}
+.amsg[hidden]{display:none}
+.pend{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0;padding:14px 16px;background:#1b7a3d;color:#fff;text-decoration:none;font-weight:700;font-size:16px;line-height:1.3}
+.pend b{background:#fff;color:#1b7a3d;border-radius:8px;padding:8px 16px;font-size:13px}.main-tabs{display:flex;gap:8px;margin:8px 0 14px}.main-tabs .btn{flex:1;margin:0}.main-tabs .active{background:#1b7a3d}.backup-feature .backup-actions{display:flex;gap:8px;flex-wrap:wrap}.backup-feature .btn{font-size:14px;padding:0 12px}#homeView[hidden],#reviewView[hidden]{display:none}
+.wrow{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px}
+.wrow .btn{margin:0}
+.bill-img{display:block;width:100%;height:auto;margin-top:10px;border-radius:8px}
+
+/* RBH KHATA BOOK v13 features */
+.feature{border:2px solid #ccc;border-radius:16px;background:#fff;padding:14px;margin:12px 0 14px;box-shadow:0 2px 5px rgba(0,0,0,.06)}.feature h2{font-size:19px;margin:0 0 8px}.feature-note{font-size:14px;color:#666;line-height:1.4;margin:0 0 10px}.feature label{display:block;font-size:14px;color:#555;margin:8px 0 5px}.feature input,.feature select{width:100%;min-height:44px;border:2px solid #ccc;border-radius:10px;padding:8px 10px;font:inherit;font-size:15px;background:#fff}.filter-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(110px,auto);gap:8px}.month-buttons{display:flex;gap:8px;margin:10px 0}.month-buttons .btn{flex:1;margin:0;text-align:center}.month-buttons .btn.active{background:#1b7a3d}.month-heading{font-size:15px;font-weight:800;margin:8px 0}.month-grid{display:grid;border:1px solid #e2dfd9;border-radius:10px;overflow:hidden}.month-grid>div{display:flex;justify-content:space-between;gap:12px;padding:9px 11px;border-bottom:1px solid #eee;font-size:14px}.month-grid>div:last-child{border:0}.month-grid .month-close{font-weight:800;background:#f6f4ef}.month-close b{color:#1b7a3d}.next-box{padding:12px 16px 14px;border-top:1px solid #eee}.next-title{font-size:14px;font-weight:800;color:#333;margin:0 0 8px}.next-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.next-actions .btn{margin:0}.next-saved{font-size:15px;font-weight:800;color:#1b7a3d;margin:0 0 8px}.next-help{font-size:12px;color:#666;margin:7px 0 0}.search-results{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:8px}.search-result{list-style:none;background:#f6f4ef;border-radius:10px;padding:12px}.search-name{font-weight:700;margin-top:6px}.history-count{font-size:13px;color:#666;margin:8px 0}.history-empty{padding:14px;background:#f6f4ef;border-radius:10px;color:#666}.feature input[type=search]{min-width:0}@media(max-width:390px){.filter-row{grid-template-columns:1fr}}
+
+</style></head>
+<body><main id="app"></main>
+<script>
+var UPDATED='15 Oct 2026',PARTIES=[];
+var BLOB={s:'1Jo+29WzrAC6WSBpQ/r7QQ==',i:'aoaf4IHa4/f4dfrk',c:'P36SWrVeyDtUBTWmyb4AuDDBnd1IODLbq8DA+0ZjydHH69CJ6D8KdtnhOifFbyTimWEpmrw4J2/komKr5aUuqi/KDMNZoy6s/9p31/1K26AmICIIhvDAT2etA7MX6S2mTWpJ65GSvuazQGcS1bXtLO+uVgWH+q+6GbBlUNess+CaV0quoC+1Sw/KQLYYyjmMoLazO4ph5DjcPepiwBLk+yAUF/qbUQMxF61ViO+mETHzFB7no5Fzi5vN+ho08WzNj/is69hgIy2ZSVI/W+DMCpQ/1aJfBnaX6Rrq4yMiGXYFQ9UzrWDHwcoR7VN2IOnGhyU1jxnaYDwU9RTlev56C2W1EoAwN1dIxwkI+GqCikkbKRzaUIE1G2Rd0nuJVlSR6sZ3McP5tgV9SfJzGiOk5LZFuGG6ZbmBxY3ZVKLPpV+oojiJqAod2uvFkCBKivDwOjJPu1+2HWDgwo0rrWzqZoHamba7yE7XzjUGl6/LfrQfiea6EkvlkRIX8Qtf2duA5OtZkNJoSSPaevy0H28AxDTil3d4XmL/rjzNbe8oT7xBDAmH6TfpMTUx9r5BAByzwtOros4g7G5f8fyGjgks/+rRyQmNS2lNsV/3eMT4mKerQTTDOGKEYAXqMz93GOcTBFH1pV9WzNPcAk/esOAYQxvaOelpqYn4OILli8/RwEDw5V0spOWEjYyUPoDDMbJehoQpRjgpl/ffVFzjWBH5B6DeZrzEoEcVp0RESpO5BKeAxCFqRSj82eH5pbUVs8M/x37zCZ31Pns8grJbcN24bBHSikz/DOraO6X8bdou79R16JN1TPUVPfeBPRA2RwSNGUvJoTG2tI5iFTDnubrrTdnfPUSBGPamiBGb129s4qkL9X7dYKmDfEPrMN6LKAe1cptmIPcPVSUZb/J/kdYzDo1/depBHxOSI6IZBQaK6Rp/q/dl5ASvMU1uiaqUJRPGk0ZWHCXI6JOhqZyWlfmsd4vUWGjj1Dr18FvphTtoaJ+5E3Vn4QkhjayLcNnk+5LbDiIfZpJx5TZjHCZacPoKzW4M1NsaM+131MP5bobhEzlfJyV17hRSYMrrN6E/AGNxuxh5gZ4wz3MMxSbl6L119jLvY9eDVEuoNVY/LExqY+G76+Q47dHdufHGPg5qAJZVL95gDxkbZpnyWB4r+Epvk8yAX5RLMnhzBhMMkPbvvTVRxRukFg6yOmddEPwGTOAmaIT8AIuvKec6eKDCSlr+MzYSrAYJflxxpi3QCG0EGQdR0XT6KL9Oj8PTY6Ts48/S8y2qxn2Q+Hl37ejezQ0XSG5NV1RmIHg+J7yk+tsaCcx41vL0yDTFdDCo/dN/60WLY1hnl/23wkx9smoLIXKc4Qz4VZG1IzfrBR/fbu3ruUBYKf3xni/gn9W3CKZZa/SCCH+Z/1kFMBg84s8HCY60SbODXceBL9U6sMsqOjjMb54Z5IY3CRmFOXke1eL85UxYEe56O1Odg9k4Xsu88KjfB6/bWKo8BrnociEr/13N5uItR5vOP/xCJk6QHJf7vio7XzvFq5Hv6huLiSWQNs4kjD6Y1ryBcBOAzWpPPl4pANtLfxpmdJXGH+rW1lZC5qyZwZ64GOH6x5VuXEQr5ISKkvQNo7mP3K3raKT/YQtbwXY0dFo6H/4RGcTwNNu9WIqHpUbbM2js+8+Zaf4fQVIl86DZi5RmK/6Y0JiXZdaw7h2/NWF8Xh+HvoaagfUbqi+YlY0Q3+Z32egv+2iW4lOkUDc+CYVzN/cb1LSC2rBUUMXDA27eSgoIyvZC5lQPZcwoR9F6cW3mQxUCzlCwmYmiyiBDyLni7hF9ZOkwSVZKXjA8AkNgjM9lff4qh6+pyKEqiCDIHhS4cawqBOh9dt7Tow=='};
+var L={opening:'Opening Balance',maal:'Goods Received',payment:'Payment Made',kata:'Adjusted'};
+var monthOffset=0,nextKey='rbh_next_payment_v1';
+function nextDates(){try{return JSON.parse(localStorage.getItem(nextKey)||'{}')}catch(x){return{}}}
+function dateISO(v){var m=String(v||'').match(/^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{4})$/);if(m){var a=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'],ix=a.indexOf(m[2].slice(0,3).toLowerCase());return ix<0?null:new Date(+m[3],ix,+m[1])}var d=new Date(v);return isNaN(d.getTime())?null:new Date(d.getFullYear(),d.getMonth(),d.getDate())}
+function prettyDate(v){var d=dateISO(v);return d?d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):v}
+function refreshMonth(){var sel=document.getElementById('monthParty'),box=document.getElementById('monthRows'),lab=document.getElementById('monthLabel');if(!sel||!box||!lab)return;var n=new Date(),st=new Date(n.getFullYear(),n.getMonth()+monthOffset,1),en=new Date(st.getFullYear(),st.getMonth()+1,1);lab.textContent=st.toLocaleDateString('en-GB',{month:'long',year:'numeric'});var ps=sel.value==='all'?PARTIES:PARTIES.filter(function(p){return p.name===sel.value}),opening=0,goods=0,payments=0,adjustments=0;ps.forEach(function(p){p.entries.forEach(function(e){var d=dateISO(e.date);if(e.type==='opening'){opening+=e.amount;return}if(!d)return;if(d<st)opening+=sg(e);else if(d<en){if(e.type==='maal')goods+=e.amount;else if(e.type==='payment')payments+=e.amount;else if(e.type==='kata')adjustments+=e.amount}})});var close=opening+goods-payments-adjustments;box.innerHTML='<div><span>Opening balance</span><b>'+inr(opening)+'</b></div><div><span>Goods received</span><b>'+inr(goods)+'</b></div><div><span>Payments made</span><b>'+inr(payments)+'</b></div><div><span>Adjustments</span><b>'+inr(adjustments)+'</b></div><div class="month-close"><span>Closing balance</span><b>'+inr(close)+'</b></div>'}
+function globalSearch(){var inp=document.getElementById('historySearch'),q=(inp?inp.value:'').trim().toLowerCase(),compact=q.replace(/[,₹\s]/g,''),kind=(document.getElementById('historyKind')||{}).value||'all',out=document.getElementById('searchResults');if(!out)return;var a=[];PARTIES.forEach(function(p,pi){p.entries.forEach(function(e,ei){var label=L[e.type]||e.type,cat=e.type==='maal'?'purchase':e.type==='payment'?'payment':e.type==='kata'?'adjusted':'opening',text=(p.name+' '+e.date+' '+e.amount+' '+inr(e.amount)+' '+(e.note||'')+' '+label+' '+cat).toLowerCase(),plain=text.replace(/[,₹\s]/g,'');if((!q||text.indexOf(q)>-1||plain.indexOf(compact)>-1)&&(kind==='all'||kind===cat))a.push({p:p,e:e,pi:pi,ei:ei,label:label})})});a.sort(function(x,y){return (dateISO(y.e.date)||new Date(0))-(dateISO(x.e.date)||new Date(0))});var c=document.getElementById('historyCount');if(c)c.textContent=a.length+' matching '+(a.length===1?'entry':'entries');out.innerHTML=a.length?a.map(function(x){return '<li class="search-result"><div class="h-top"><span class="h-type">'+esc(x.label)+'</span><span>'+esc(x.e.date)+'</span></div><div class="search-name">'+esc(x.p.name)+'</div><div class="h-amt">'+(sg(x.e)<0?'− ':'')+inr(x.e.amount)+'</div>'+(x.e.note?'<div class="h-note">'+esc(x.e.note)+'</div>':'')+(x.e.bill?'<button class="btn bill" data-src="bills/'+esc(x.e.bill)+'">View Bill</button>':'')+'</li>'}).join(''):'<li class="history-empty">No matching entries. Try another amount, date, note or type.</li>'}
+function inr(n){return '\u20B9'+n.toLocaleString('en-IN')}
+function sg(e){return e.type==='payment'||e.type==='kata'?-e.amount:e.amount}
+function bal(es){var s=0;es.forEach(function(e){s+=sg(e)});return s}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function sum(es,t){var s=0;es.forEach(function(e){if(t.indexOf(e.type)>-1)s+=e.amount});return s}
+var SIG='\n\nFrom: Raja Boot House, Dharni';
+function wa(p,txt){return 'https://wa.me/'+p.phone.replace(/\D/g,'')+'?text='+encodeURIComponent(txt)}
+function pend(p,pi){
+ var run=0,out='';
+ p.entries.forEach(function(e,j){run+=sg(e);if((e.type!=='payment'&&e.type!=='maal')||e.sent)return;
+  var t=run===0&&e.type==='payment'?'Dear '+p.short+', your payment has been received in full. Your account is now clear (balance \u20B90). Thank you.'+SIG
+   :e.type==='payment'?'Dear '+p.short+', '+inr(e.amount)+' has been paid towards your account today. Remaining balance: '+inr(run)+'. Thank you.'+SIG
+   :'Dear '+p.short+', we have received a new purchase of '+inr(e.amount)+' from you. Total outstanding: '+inr(run)+'.'+SIG;
+  out+='<a class=\"pend\" target=\"_blank\" rel=\"noopener\" href=\"'+esc(wa(p,t))+'\"><span>WhatsApp message ready - not sent</span><b>OPEN WHATSAPP</b></a>'});
+ return out}
+function party(p,i){
+ var b=bal(p.entries),run=0,rows=p.entries.map(function(e){run+=sg(e);return{e:e,r:run}}).reverse();
+ var h=rows.map(function(x){var e=x.e;return '<li><div class="h-top"><span>'+esc(e.date)+'</span><span class="h-type">'+L[e.type]+'</span></div><div class="h-amt">'+(sg(e)<0?'\u2212 ':'')+inr(e.amount)+'</div><div class="h-bal">Balance: <b'+(x.r===0?' class="clear"':'')+'>'+inr(x.r)+'</b>'+(x.r===0?' <span class="pill">\u2713 CLEAR</span>':'')+'</div>'+(e.note?'<div class="h-note">'+esc(e.note)+'</div>':'')+(e.bill?'<button class="btn bill" data-src="bills/'+esc(e.bill)+'">View Bill</button>':'')+'</li>'}).join('');
+ var w='';if(p.phone){w='<div class="wrow"><button class="btn wa" data-k="purchase" data-i="'+i+'">WhatsApp: Purchase</button><button class="btn wa" data-k="payment" data-i="'+i+'">WhatsApp: Payment Done</button>';if(b>0)w+='<a class="btn wa" target="_blank" rel="noopener" href="'+esc(wa(p,'Dear '+p.short+', your pending payment of '+inr(b)+' will be cleared within this week. Thank you for your patience.'+SIG))+'">WhatsApp: Need Time</a>';w+='<a class="btn wa" target="_blank" rel="noopener" href="'+esc(wa(p,'Dear '+p.short+', your payment has been received in full. Your account is now clear (balance \u20B90). Thank you.'+SIG))+'">WhatsApp: Hisaab Clear</a><form class="amt" hidden data-i="'+i+'"><input type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Amount \u20B9" aria-label="Amount"><button class="btn" type="submit">Go</button><p class="amsg" hidden></p></form></div>'}
+ var next=nextDates(),saved=next[p.name]||'',rem=b>0?'<section class="next-box"><p class="next-title">Next payment date</p>'+(saved?'<p class="next-saved">Next payment: '+esc(prettyDate(saved))+'</p>':'')+'<input type="date" aria-label="Next payment date for '+esc(p.name)+'" value="'+esc(saved)+'" data-next-input="'+i+'"><div class="next-actions"><button class="btn" type="button" data-next-save="'+i+'">Save date</button>'+(saved?'<button class="btn" type="button" data-next-clear="'+i+'">Clear date</button>':'')+'</div><p class="next-help">Saved on this phone for your reference only. No supplier message is sent.</p></section>':'';
+ return '<div class="card">'+(p.phone?pend(p,i):'')+'<details class="party"><summary><span class="p-name"><span class="num">'+(i+1)+'</span>'+esc(p.name)+'</span><span class="p-bal"><small>To Pay</small><b class="'+(b>0?'due':'clear')+'">'+inr(b)+'</b>'+(b===0?'<span class="pill">\u2713 CLEAR</span>':'')+'</span></summary><div class="p-body"><div class="p-sum"><div><small>Goods Received</small><b>'+inr(sum(p.entries,['opening','maal']))+'</b></div><div><small>Payment Made</small><b>'+inr(sum(p.entries,['payment']))+'</b></div><div><small>Adjusted</small><b>'+inr(sum(p.entries,['kata']))+'</b></div><div><small>Balance</small><b>'+inr(b)+'</b></div></div><ol class="hist">'+h+'</ol></div></details>'+rem+w+'</div>'
+}
+function render(){
+ var T=0;PARTIES.forEach(function(p){T+=bal(p.entries)});
+ document.getElementById('app').innerHTML='<h1>RBH KHATA BOOK</h1><p class="upd">Updated: '+UPDATED+'</p><nav class="main-tabs" aria-label="Main sections"><button type="button" class="btn active" data-tab="home">Home</button><button type="button" class="btn" data-tab="review">Monthly Review</button></nav><section id="homeView"><section class="total"><small>Total Payable</small><b>'+inr(T)+'</b></section><div class="parties">'+PARTIES.map(party).join('')+'</div><section class="feature backup-feature"><h2>Backup and export</h2><p class="feature-note">Encrypted backup uses the existing PIN. CSV export contains readable supplier and transaction details. Keep it private; anyone with the file can read it.</p><div class="backup-actions"><button type="button" class="btn" data-export="backup">Download encrypted backup</button><button type="button" class="btn" data-export="csv">Export CSV</button></div><p class="next-help">Backup is encrypted with the existing PIN and includes the salt needed for future recovery. Restore is not built yet; keep the encrypted copy and current app link safe. CSV is readable financial data, so store it privately.</p></section></section><section id="reviewView" hidden><section class="feature"><h2>Monthly Review</h2><p class="feature-note">This month or last month: goods received, payments, adjustments and balances.</p><div class="month-buttons"><button type="button" class="btn active" data-month="0">This month</button><button type="button" class="btn" data-month="-1">Last month</button></div><p id="monthLabel" class="month-heading"></p><label for="monthParty">Supplier</label><select id="monthParty"><option value="all">All suppliers</option>'+PARTIES.map(function(p){return '<option value="'+esc(p.name)+'">'+esc(p.name)+'</option>'}).join('')+'</select><div id="monthRows" class="month-grid"></div><p class="next-help">Payments are shown as recorded; no cash or payment method is assumed.</p></section><section class="feature"><h2>Find a ledger entry</h2><p class="feature-note">Search by amount, date, note or supplier; filter by purchase or payment. Search uses saved text only, no OCR.</p><div class="filter-row"><input id="historySearch" type="search" placeholder="Amount, date, note or supplier" autocomplete="off"><select id="historyKind" aria-label="Filter history type"><option value="all">All entries</option><option value="purchase">Purchases</option><option value="payment">Payments</option><option value="adjusted">Adjustments</option></select></div><p id="historyCount" class="history-count"></p><ol id="searchResults" class="search-results"></ol></section></section><p class="ver">v13 · <a href="#" id="lk">Lock</a></p>';refreshMonth();globalSearch();
+}
+function setTab(name){var home=document.getElementById('homeView'),review=document.getElementById('reviewView');if(!home||!review)return;home.hidden=name!=='home';review.hidden=name!=='review';document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-tab')===name)});if(name==='review'){refreshMonth();globalSearch()}}
+function csvCell(v){var s=String(v==null?'':v);if(typeof v==='string'&&/^[\t\r\n ]*[=+\-@]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}
+function downloadFile(name,type,text){var a=document.createElement('a'),blob=new Blob([text],{type:type}),url=URL.createObjectURL(blob);a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},1000)}
+function exportCsv(){var rows=[['Supplier','Phone','Type','Date','Amount INR','Running balance INR','Note','Bill reference']];PARTIES.forEach(function(p){var run=0;p.entries.forEach(function(e){run+=sg(e);rows.push([p.name,p.phone||'',L[e.type]||e.type,e.date,e.amount,run,e.note||'',e.bill||''])})});downloadFile('rbh-khata-ledger-'+new Date().toISOString().slice(0,10)+'.csv','text/csv;charset=utf-8','\uFEFF'+rows.map(function(r){return r.map(csvCell).join(',')}).join('\r\n'))}
+function exportBackup(){var raw;try{raw=localStorage.getItem('rbh_k')}catch(x){}if(!raw){alert('Unlock again before making a backup.');return}var key=crypto.subtle.importKey('raw',b2u(raw),'AES-GCM',false,['encrypt']),iv=crypto.getRandomValues(new Uint8Array(12)),data=new TextEncoder().encode(JSON.stringify({u:UPDATED,p:PARTIES}));key.then(function(k){return crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,data)}).then(function(buf){downloadFile('rbh-khata-encrypted-backup-'+new Date().toISOString().slice(0,10)+'.json','application/json',JSON.stringify({format:'RBH-KHATA-ENCRYPTED-BACKUP',version:1,createdAt:new Date().toISOString(),salt:BLOB.s,iterations:IT,iv:u2b(iv),ciphertext:u2b(new Uint8Array(buf))},null,2))}).catch(function(){alert('Backup failed. No file was downloaded.')})}
+document.addEventListener('input',function(ev){if(ev.target&&ev.target.id==='historySearch')globalSearch()});
+document.addEventListener('change',function(ev){if(ev.target&&ev.target.id==='historyKind')globalSearch();if(ev.target&&ev.target.id==='monthParty')refreshMonth()});
+document.addEventListener('click',function(ev){var tab=ev.target.closest&&ev.target.closest('button[data-tab]');if(tab){setTab(tab.getAttribute('data-tab'));return}var ex=ev.target.closest&&ev.target.closest('button[data-export]');if(ex){if(ex.getAttribute('data-export')==='csv')exportCsv();else exportBackup();return}var m=ev.target.closest&&ev.target.closest('button[data-month]');if(m){monthOffset=+m.getAttribute('data-month');document.querySelectorAll('button[data-month]').forEach(function(x){x.classList.toggle('active',x===m)});refreshMonth();return}var save=ev.target.closest&&ev.target.closest('button[data-next-save]'),clear=ev.target.closest&&ev.target.closest('button[data-next-clear]');if(save||clear){var i=+(save||clear).getAttribute(save?'data-next-save':'data-next-clear'),p=PARTIES[i],map=nextDates();if(clear)delete map[p.name];else{var inp=document.querySelector('input[data-next-input="'+i+'"]');if(!inp||!inp.value)return;map[p.name]=inp.value}try{localStorage.setItem(nextKey,JSON.stringify(map))}catch(x){}render();return}});
+document.addEventListener('click',function(ev){
+ var b=ev.target.closest&&ev.target.closest('.bill');if(!b)return;
+ var n=b.nextElementSibling;
+ if(n&&n.tagName==='IMG'){n.remove();b.textContent='View Bill';return}
+ var i=document.createElement('img');i.className='bill-img';i.alt='Bill';i.src=b.getAttribute('data-src');b.after(i);b.textContent='Hide Bill'});
+document.addEventListener('click',function(ev){
+ var t=ev.target.closest&&ev.target.closest('button[data-k]');if(!t)return;
+ var row=t.parentNode,f=row.querySelector('.amt');
+ if(!f.hidden&&f.getAttribute('data-k')===t.getAttribute('data-k')){f.hidden=true;return}
+ f.hidden=false;f.setAttribute('data-k',t.getAttribute('data-k'));
+ Array.prototype.forEach.call(row.querySelectorAll('button[data-k]'),function(x){x.classList.toggle('on',x===t)});
+ var inp=f.querySelector('input');inp.value='';inp.focus();
+});
+document.addEventListener('submit',function(ev){
+ var f=ev.target;if(!f.classList.contains('amt'))return;ev.preventDefault();
+ var p=PARTIES[+f.getAttribute('data-i')],k=f.getAttribute('data-k'),inp=f.querySelector('input');
+ var n=parseInt(inp.value.replace(/[^0-9]/g,''),10);
+ var b=bal(p.entries),txt,mg=f.querySelector('.amsg');mg.hidden=true;
+ function bad(m){mg.textContent=m;mg.hidden=false;inp.focus()}
+ if(!n||n<1)return bad('Enter an amount greater than \u20B90');
+ if(k==='payment'&&n>b)return bad('Payment balance ('+inr(b)+') se zyada nahi ho sakti');
+ if(k==='payment')txt='Dear '+p.short+', '+inr(n)+' has been paid towards your account today. Remaining balance: '+inr(b-n)+'. Thank you.'+SIG;
+ else txt='Dear '+p.short+', we have received a new purchase of '+inr(n)+' from you. Total outstanding: '+inr(b+n)+'.'+SIG;
+ window.open(wa(p,txt),'_blank');
+});
+
+var IT=300000;
+function b2u(b){var s=atob(b),a=new Uint8Array(s.length);for(var i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a}
+function u2b(a){var s='';for(var i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s)}
+function dec(raw){return crypto.subtle.importKey('raw',raw,'AES-GCM',false,['decrypt']).then(function(k){return crypto.subtle.decrypt({name:'AES-GCM',iv:b2u(BLOB.i)},k,b2u(BLOB.c))}).then(function(buf){return JSON.parse(new TextDecoder().decode(buf))})}
+function open_(D){UPDATED=D.u;PARTIES=D.p;render();var lk=document.getElementById('lk');if(lk)lk.addEventListener('click',function(e){e.preventDefault();try{localStorage.removeItem('rbh_k')}catch(x){}location.reload()})}
+function lockScreen(){
+ document.getElementById('app').innerHTML='<h1>RBH KHATA BOOK</h1><form class="lock" id="lf"><p>Enter PIN to open</p><input id="pin" type="password" autocomplete="off" aria-label="PIN"><p class="err" id="err"></p><button class="btn" type="submit">Unlock</button><p class="ver">v13</p></form>';
+ var f=document.getElementById('lf'),pin=document.getElementById('pin'),err=document.getElementById('err');pin.focus();
+ f.addEventListener('submit',function(e){e.preventDefault();var v=pin.value;if(!v)return;err.textContent='Unlocking...';
+  crypto.subtle.importKey('raw',new TextEncoder().encode(v),'PBKDF2',false,['deriveBits']).then(function(km){return crypto.subtle.deriveBits({name:'PBKDF2',salt:b2u(BLOB.s),iterations:IT,hash:'SHA-256'},km,256)}).then(function(bits){var raw=new Uint8Array(bits);return dec(raw).then(function(D){try{localStorage.setItem('rbh_k',u2b(raw))}catch(x){}open_(D)},function(){err.textContent='Wrong PIN';pin.value='';pin.focus()})}).catch(function(){err.textContent='Could not unlock'})})}
+(function(){var k=null;try{k=localStorage.getItem('rbh_k')}catch(x){}
+ if(!k||!window.crypto||!crypto.subtle){lockScreen();return}
+ dec(b2u(k)).then(open_,lockScreen)})();
+if('serviceWorker' in navigator){
+ var had=!!navigator.serviceWorker.controller,rl=false;
+ navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=true;location.reload()}had=true});
+ navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(reg){
+  reg.update().catch(function(){});
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)reg.update().catch(function(){})});
+ }).catch(function(){});
+}
+</script></body></html>
