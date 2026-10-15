@@ -86,9 +86,10 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;
 function sum(es,t){var s=0;es.forEach(function(e){if(t.indexOf(e.type)>-1)s+=e.amount});return s}
 var SIG='\n\nFrom: Raja Boot House, Dharni';
 function wa(p,txt){return 'https://wa.me/'+p.phone.replace(/\D/g,'')+'?text='+encodeURIComponent(txt)}
+function pendingBannerVisible(e){var d=dateISO(e.date);if(!d)return false;var expiry=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1),today=new Date();today.setHours(0,0,0,0);return today<=expiry}
 function pend(p,pi){
  var run=0,out='';
- p.entries.forEach(function(e,j){run+=sg(e);if((e.type!=='payment'&&e.type!=='maal')||e.sent)return;
+ p.entries.forEach(function(e,j){run+=sg(e);if((e.type!=='payment'&&e.type!=='maal')||e.sent||!pendingBannerVisible(e))return;
   var t=run===0&&e.type==='payment'?'Dear '+p.short+', your payment has been received in full. Your account is now clear (balance \u20B90). Thank you.'+SIG
    :e.type==='payment'?'Dear '+p.short+', '+inr(e.amount)+' has been paid towards your account today. Remaining balance: '+inr(run)+'. Thank you.'+SIG
    :'Dear '+p.short+', we have received a new purchase of '+inr(e.amount)+' from you. Total outstanding: '+inr(run)+'.'+SIG;
