@@ -1,4 +1,4 @@
-var V='v20';
+var V='v21';
 var C='rbh-khata-'+V;
 var FILES=['./','index.html','manifest.json','icon-192.png','icon-512.png'];
 self.addEventListener('install',function(e){self.skipWaiting();e.waitUntil(caches.open(C).then(function(c){return c.addAll(FILES.map(function(f){return new Request(f,{cache:'reload'})}))}))});
