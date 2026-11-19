@@ -171,7 +171,8 @@ if('serviceWorker' in navigator){
   document.addEventListener('visibilitychange',function(){if(!document.hidden)reg.update().catch(function(){})});
  }).catch(function(){});
 }
-</script><script>
+</script></body></html>
+<script>
 
 /* ===== RBH self-entry v21: local entries, undo, restore, Jadoo sync ===== */
 (function(){
@@ -494,6 +495,8 @@ function gbStatusRender(){
  if(s.at){var d=new Date(s.at);el.textContent=t('Google backup: ho gaya ','Google बैकअप: हो गया ')+'('+d.toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})+')';el.style.color='#1a7f37';return}
  el.textContent=t('Google backup: abhi kabhi nahi hua - neeche button dabayein','Google बैकअप: अभी तक नहीं हुआ - नीचे बटन दबाएं');el.style.color='#666';
 }
+/* initial paint: base render ran before this script loaded, so kick one render to inject the new UI */
+try{render()}catch(x){}
 window.__sePdf={party:buildPartyPdf,all:buildAllPdf,backup:buildFullBackup};
 })();
 
