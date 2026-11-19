@@ -174,7 +174,7 @@ if('serviceWorker' in navigator){
 </script></body></html>
 <script>
 
-/* ===== RBH self-entry v21: local entries, undo, restore, Jadoo sync ===== */
+/* ===== RBH self-entry v24: local entries, undo, restore, two-way Drive sync ===== */
 (function(){
 if(typeof open_!=='function'||typeof render!=='function')return;
 var LKEY='rbh_local_v1';
@@ -207,7 +207,13 @@ function applyLocal(){
  PARTIES.forEach(function(p){p.entries.sort(function(a,b){var da=dateISO(a.date),db=dateISO(b.date);return (da?da.getTime():0)-(db?db.getTime():0)})});
 }
 var _render=window.render;
-window.render=function(){applyLocal();_render();injectUI()};
+window.render=function(){applyLocal();_render();fixFooter();injectUI()};
+function fixFooter(){
+ var ver=document.querySelector('.ver');if(!ver)return;
+ ver.innerHTML='v24 · <a href="#" id="lk">'+t('Lock','लॉक')+'</a> · <a href="#" id="lg">'+(HI?'English':'हिंदी')+'</a>';
+ var lk2=document.getElementById('lk');if(lk2)lk2.addEventListener('click',function(e){e.preventDefault();try{localStorage.removeItem('rbh_k')}catch(x){}location.reload()});
+ var lg2=document.getElementById('lg');if(lg2)lg2.addEventListener('click',function(e){e.preventDefault();try{localStorage.setItem('rbh_lang',HI?'en':'hi')}catch(x){}location.reload()});
+}
 function afterVals(){var p=PARTIES[FS.party];if(!p)return null;var b=bal(p.entries);var n=parseInt(String(FS.amount).replace(/\D/g,''),10)||0;var nb=FS.kind==='maal'?b+n:b-n;var T=0;PARTIES.forEach(function(x,i){T+=i===FS.party?nb:bal(x.entries)});return{p:p,b:b,n:n,nb:nb,T:T}}
 function seMsg(m){var el=document.getElementById('seMsg');if(el){el.textContent=m;el.hidden=false}}
 function injectUI(){
@@ -244,7 +250,6 @@ function injectUI(){
   var gn=document.createElement('p');gn.className='feature-note';gn.textContent=t('Encrypted backup aapke Google Drive ke hidden app folder mein save hota hai. Sirf backup file, koi hisaab Google ko nahi dikhta. Save ke baad apne-aap try karta hai; na ho toh yahan PENDING dikhega.','एन्क्रिप्टेड बैकअप आपके Google Drive के हिडन ऐप फोल्डर में सेव होता है।');ba.appendChild(gn);
   setTimeout(gbStatusRender,0);
  }
- var ver=document.querySelector('.ver');if(ver&&ver.textContent.indexOf('v21')!==0)ver.textContent=ver.textContent.replace(/^v\d+/,t('v23','v23'));
  updPrev();
  injectPdfButtons();
 }
@@ -459,6 +464,7 @@ document.addEventListener('click',function(ev){
 var GCLIENT_ID='930855618562-vl8j0skui4dtjp83m6euiautdanmlmpc.apps.googleusercontent.com';
 var GSCOPE='https://www.googleapis.com/auth/drive.appdata';
 var GBKEY='rbh_gbackup_v1';
+var GBFILE=/[?&]synctest=1/.test(location.search)?'rbh-khata-backup-test.json':'rbh-khata-backup.json';
 var gTok=null,gTokExp=0,gBusy=false;
 function gbState(){try{return JSON.parse(localStorage.getItem(GBKEY)||'{}')}catch(x){return {}}}
 function gbSet(s){try{localStorage.setItem(GBKEY,JSON.stringify(s))}catch(x){}}
@@ -489,7 +495,7 @@ function gbDecrypt(o,cb){
  });
 }
 function gbFind(tok,cb){
- fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q='+encodeURIComponent("name='rbh-khata-backup.json'")+'&fields=files(id)',{headers:{Authorization:'Bearer '+tok}}).then(function(r){return r.json()}).then(function(list){cb((list.files||[])[0]||null)}).catch(function(){cb(null,'net')});
+ fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q='+encodeURIComponent("name='"+GBFILE+"'")+'&fields=files(id)',{headers:{Authorization:'Bearer '+tok}}).then(function(r){return r.json()}).then(function(list){cb((list.files||[])[0]||null)}).catch(function(){cb(null,'net')});
 }
 function gbDownload(tok,f,cb){
  fetch('https://www.googleapis.com/drive/v3/files/'+f.id+'?alt=media',{headers:{Authorization:'Bearer '+tok}}).then(function(r){
@@ -499,7 +505,7 @@ function gbDownload(tok,f,cb){
 }
 function gbWrite(tok,id,payload,cb){
  var body=JSON.stringify(payload);
- var meta=id?{name:'rbh-khata-backup.json'}:{name:'rbh-khata-backup.json',parents:['appDataFolder'],mimeType:'application/json'};
+ var meta=id?{name:GBFILE}:{name:GBFILE,parents:['appDataFolder'],mimeType:'application/json'};
  var bd='xxrbhbk'+Date.now();
  var mp='--'+bd+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify(meta)+'\r\n--'+bd+'\r\nContent-Type: application/json\r\n\r\n'+body+'\r\n--'+bd+'--';
  fetch(id?('https://www.googleapis.com/upload/drive/v3/files/'+id+'?uploadType=multipart'):'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:id?'PATCH':'POST',headers:{Authorization:'Bearer '+tok,'Content-Type':'multipart/related; boundary='+bd},body:mp}).then(function(r){cb(!!(r&&r.ok),r&&r.ok?null:('http'+(r?r.status:'')))}).catch(function(){cb(false,'net')});
@@ -567,16 +573,19 @@ setTimeout(function(){
    gbDownload(tok,f,function(D,derr){
     if(derr||!D)return;
     var add=mergePayload(D);
-    if(!add.length)return;
-    saveLocals(locals().concat(add));
-    try{render()}catch(x){}
-    rMsg(add.length+t(' entry(s) doosre phone ke backup se jodi gayi.',' एंट्री दूसरे फोन के बैकअप से जोड़ी गई।'));
+    var dIds={},dKeys={};
+    (D.p||[]).forEach(function(p){(p.entries||[]).forEach(function(e){if(e.id)dIds[e.id]=1;dKeys[ck(p.name,e)]=1})});
+    (D.local||[]).forEach(function(le){if(le.id)dIds[le.id]=1;dKeys[ck(le.party,le)]=1});
+    var missing=locals().filter(function(le){return !((le.id&&dIds[le.id])||dKeys[ck(le.party,le)])});
+    if(add.length){saveLocals(locals().concat(add));try{render()}catch(x){}rMsg(add.length+t(' entry(s) doosre phone ke backup se jodi gayi.',' एंट्री दूसरे फोन के बैकअप से जोड़ी गई।'))}
+    if(missing.length){gbUpload(function(){})}
    });
   });
  });
 },2000);
 window.__sePdf={party:buildPartyPdf,all:buildAllPdf,backup:buildFullBackup};
 })();
+
 
 
 
