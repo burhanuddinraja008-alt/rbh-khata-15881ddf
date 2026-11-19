@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RBH KHATA BOOK</title>
+<meta name="theme-color" content="#111111">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="RBH KHATA BOOK">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#faf9f7;color:#1a1a1a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 40px;padding-top:max(20px,env(safe-area-inset-top))}
+h1{font-size:28px;margin:8px 0 4px;letter-spacing:.5px}
+.ver{margin:24px 0 8px;text-align:center;color:#999;font-size:12px}
+.ver a{color:#666;padding:10px 6px}
+.lock{padding:40px 8px;text-align:center}
+.lock input{width:100%;height:50px;margin:14px 0;padding:0 14px;border:2px solid #cfcfcf;border-radius:12px;font-size:20px;text-align:center;font-family:inherit}
+.lock .btn{width:100%;line-height:50px;min-height:50px}
+.lock .err{color:#b3261e;font-weight:700;min-height:22px;margin:0}
+.upd{margin:0 0 16px;color:#666;font-size:15px}
+.total{background:#111;color:#fff;border-radius:16px;padding:18px 20px;margin:0 0 16px;border:1px solid #b8923a}
+.total small{display:block;font-size:15px;opacity:.8}
+.total b{font-size:34px;font-weight:800;color:#e6c26a}
+.parties{display:flex;flex-direction:column;gap:12px}
+.card{border:2px solid #cfcfcf;border-radius:18px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08);overflow:hidden}
+.party{background:#fff}
+.card>.wrow{margin:0;padding:0 16px 16px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;margin-right:8px;border-radius:50%;background:#111;color:#fff;font-size:14px;font-weight:700;vertical-align:middle}
+.party summary{list-style:none;cursor:pointer;display:flex;flex-direction:column;gap:8px;padding:16px;min-height:44px}
+.party summary::-webkit-details-marker{display:none}
+.p-name{font-size:18px;font-weight:700;line-height:1.25;word-break:break-word}
+.p-bal small,.p-sum small{display:block;font-size:14px;color:#666}
+.p-bal b{font-size:26px;font-weight:800}
+.due{color:#b3261e}.clear{color:#1b7a3d;font-weight:800}
+.pill{display:inline-block;margin-left:8px;padding:3px 10px;border-radius:999px;background:#dff3e5;color:#1b7a3d;border:1px solid #1b7a3d;font-size:13px;font-weight:800;letter-spacing:.5px;vertical-align:middle}
+.party summary::after{content:"Tap for full history \25BE";font-size:14px;color:#666}body.hi .party summary::after{content:"\092A\0942\0930\093E \0939\093F\0938\093E\092C \25BE"}
+.party[open] summary::after{content:"Close \25B4"}body.hi .party[open] summary::after{content:"\092C\0902\0926 \0915\0930\0947\0902 \25B4"}
+.p-body{padding:0 16px 16px;border-top:1px solid #eee}
+.p-sum{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 0}
+.p-sum b{font-size:18px;font-weight:700}
+.hist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.hist li{background:#f6f4ef;border-radius:12px;padding:12px 14px}
+.h-top{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:#555}
+.h-type{font-weight:700;color:#111}
+.h-amt{font-size:22px;font-weight:800;margin-top:4px}
+.h-bal{font-size:15px;margin-top:2px}
+.h-note{font-size:14px;color:#666;margin-top:4px}
+.btn{display:inline-block;margin-top:8px;min-height:44px;line-height:44px;padding:0 18px;border-radius:10px;background:#111;color:#fff;text-decoration:none;font-weight:700;border:0;font-size:16px;font-family:inherit}
+.wa{background:#1b7a3d}
+.wa.on{outline:3px solid #111}
+.amt{display:flex;gap:8px;width:100%;margin-top:4px}
+.amt[hidden]{display:none}
+.amt input{flex:1;min-width:0;height:44px;padding:0 12px;border:2px solid #cfcfcf;border-radius:10px;font-size:18px;font-family:inherit}
+.amt .btn{margin-top:0}
+.amt{flex-wrap:wrap}
+.amsg{flex-basis:100%;margin:0;color:#b3261e;font-size:14px;font-weight:700}
+.amsg[hidden]{display:none}
+.pend{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0;padding:14px 16px;background:#1b7a3d;color:#fff;text-decoration:none;font-weight:700;font-size:16px;line-height:1.3}
+.pend b{background:#fff;color:#1b7a3d;border-radius:8px;padding:8px 16px;font-size:13px}.main-tabs{display:flex;gap:8px;margin:8px 0 14px}.main-tabs .btn{flex:1;margin:0}.main-tabs .active{background:#1b7a3d}.backup-feature .backup-actions{display:flex;gap:8px;flex-wrap:wrap}.backup-feature .btn{font-size:14px;padding:0 12px}#homeView[hidden],#reviewView[hidden]{display:none}
+.wrow{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px}
+.wrow .btn{margin:0}
+.bill-img{display:block;width:100%;height:auto;margin-top:10px;border-radius:8px}
+
+/* RBH KHATA BOOK v13 features */
+.feature{border:2px solid #ccc;border-radius:16px;background:#fff;padding:14px;margin:12px 0 14px;box-shadow:0 2px 5px rgba(0,0,0,.06)}.feature h2{font-size:19px;margin:0 0 8px}.feature-note{font-size:14px;color:#666;line-height:1.4;margin:0 0 10px}.feature label{display:block;font-size:14px;color:#555;margin:8px 0 5px}.feature input,.feature select{width:100%;min-height:44px;border:2px solid #ccc;border-radius:10px;padding:8px 10px;font:inherit;font-size:15px;background:#fff}.filter-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(110px,auto);gap:8px}.month-buttons{display:flex;gap:8px;margin:10px 0}.month-buttons .btn{flex:1;margin:0;text-align:center}.month-buttons .btn.active{background:#1b7a3d}.month-heading{font-size:15px;font-weight:800;margin:8px 0}.month-grid{display:grid;border:1px solid #e2dfd9;border-radius:10px;overflow:hidden}.month-grid>div{display:flex;justify-content:space-between;gap:12px;padding:9px 11px;border-bottom:1px solid #eee;font-size:14px}.month-grid>div:last-child{border:0}.month-grid .month-close{font-weight:800;background:#f6f4ef}.month-close b{color:#1b7a3d}.next-box{padding:12px 16px 14px;border-top:1px solid #eee}.next-title{font-size:14px;font-weight:800;color:#333;margin:0 0 8px}.next-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.next-actions .btn{margin:0}.next-saved{font-size:15px;font-weight:800;color:#1b7a3d;margin:0 0 8px}.next-help{font-size:12px;color:#666;margin:7px 0 0}.search-results{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:8px}.search-result{list-style:none;background:#f6f4ef;border-radius:10px;padding:12px}.search-name{font-weight:700;margin-top:6px}.history-count{font-size:13px;color:#666;margin:8px 0}.history-empty{padding:14px;background:#f6f4ef;border-radius:10px;color:#666}.feature input[type=search]{min-width:0}@media(max-width:390px){.filter-row{grid-template-columns:1fr}}
+
+</style></head>
+<body><main id="app"></main>
+<script>
+var UPDATED='22 Oct 2026',PARTIES=[];
+var BLOB={s:'1Jo+29WzrAC6WSBpQ/r7QQ==',i:'05xjteDgeF6ipuIP',c:'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'};
+var LANG=(function(){try{return localStorage.getItem('rbh_lang')||'en'}catch(e){return 'en'}})();var TR=LANG==='hi'?{"appTitle": "RBH \u0916\u093e\u0924\u093e \u092c\u0941\u0915", "updated": "\u0905\u092a\u0921\u0947\u091f: ", "tabHome": "\u0939\u094b\u092e", "tabReview": "\u092e\u0939\u0940\u0928\u0947 \u0915\u093e \u0939\u093f\u0938\u093e\u092c", "totalPayable": "\u0915\u0941\u0932 \u0926\u0947\u092f \u092c\u093e\u0915\u0940", "toPay": "\u0926\u0947\u0928\u093e \u092c\u093e\u0915\u0940", "clearTick": "\u091a\u0941\u0915\u0924\u093e", "goodsReceived": "\u092e\u093e\u0932 \u0906\u092f\u093e", "paymentMade": "\u092a\u0947\u092e\u0947\u0902\u091f \u0939\u0941\u0906", "adjusted": "\u090f\u0921\u091c\u0938\u094d\u091f\u092e\u0947\u0902\u091f", "balanceSm": "\u092c\u093e\u0915\u0940", "balanceLabel": "\u092c\u093e\u0915\u0940: ", "waPurchase": "WhatsApp: \u092e\u093e\u0932 \u0906\u092f\u093e", "waPayment": "WhatsApp: \u092a\u0947\u092e\u0947\u0902\u091f \u0939\u094b \u0917\u0908", "waNeedTime": "WhatsApp: \u0938\u092e\u092f \u091a\u093e\u0939\u093f\u090f", "waClear": "WhatsApp: \u0939\u093f\u0938\u093e\u092c \u0915\u094d\u0932\u093f\u092f\u0930", "nextTitle": "\u0905\u0917\u0932\u0940 \u092a\u0947\u092e\u0947\u0902\u091f \u0924\u093e\u0930\u0940\u0916", "nextSaved": "\u0905\u0917\u0932\u0940 \u092a\u0947\u092e\u0947\u0902\u091f: ", "nextAria": "\u0905\u0917\u0932\u0940 \u092a\u0947\u092e\u0947\u0902\u091f \u0924\u093e\u0930\u0940\u0916: ", "saveDate": "\u0924\u093e\u0930\u0940\u0916 \u0938\u0947\u0935 \u0915\u0930\u0947\u0902", "clearDate": "\u0924\u093e\u0930\u0940\u0916 \u0939\u091f\u093e\u090f\u0902", "nextHelp": "\u092f\u0939 \u0938\u093f\u0930\u094d\u092b \u0907\u0938\u0940 \u092b\u094b\u0928 \u092a\u0930 \u0906\u092a\u0915\u0947 \u0932\u093f\u090f \u0938\u0947\u0935 \u0939\u094b\u0924\u093e \u0939\u0948\u0964 \u0938\u092a\u094d\u0932\u093e\u092f\u0930 \u0915\u094b \u0915\u094b\u0908 \u092e\u0948\u0938\u0947\u091c \u0928\u0939\u0940\u0902 \u091c\u093e\u0924\u093e\u0964", "pendReady": "WhatsApp \u092e\u0948\u0938\u0947\u091c \u0924\u0948\u092f\u093e\u0930 - \u0905\u092d\u0940 \u0928\u0939\u0940\u0902 \u092d\u0947\u091c\u093e", "openWa": "WHATSAPP \u0916\u094b\u0932\u0947\u0902", "backupH": "\u092c\u0948\u0915\u0905\u092a \u0914\u0930 \u090f\u0915\u094d\u0938\u092a\u094b\u0930\u094d\u091f", "backupNote1": "\u090f\u0928\u094d\u0915\u094d\u0930\u093f\u092a\u094d\u091f\u0947\u0921 \u092c\u0948\u0915\u0905\u092a \u092e\u094c\u091c\u0942\u0926\u093e PIN \u0938\u0947 \u0916\u0941\u0932\u0924\u093e \u0939\u0948\u0964 CSV \u092e\u0947\u0902 \u0938\u092a\u094d\u0932\u093e\u092f\u0930 \u0914\u0930 \u0932\u0947\u0928-\u0926\u0947\u0928 \u0915\u0940 \u092a\u0942\u0930\u0940 \u091c\u093e\u0928\u0915\u093e\u0930\u0940 \u092a\u0922\u093c\u0940 \u091c\u093e \u0938\u0915\u0924\u0940 \u0939\u0948\u0964 \u0907\u0938\u0947 \u0928\u093f\u091c\u0940 \u0930\u0916\u0947\u0902; \u091c\u093f\u0938\u0915\u0947 \u092a\u093e\u0938 \u092b\u093e\u0907\u0932 \u0939\u0948 \u0935\u0939 \u092a\u0922\u093c \u0938\u0915\u0924\u093e \u0939\u0948\u0964", "dlBackup": "\u090f\u0928\u094d\u0915\u094d\u0930\u093f\u092a\u094d\u091f\u0947\u0921 \u092c\u0948\u0915\u0905\u092a \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0930\u0947\u0902", "exportCsv": "CSV \u090f\u0915\u094d\u0938\u092a\u094b\u0930\u094d\u091f \u0915\u0930\u0947\u0902", "backupNote2": "\u092c\u0948\u0915\u0905\u092a \u092e\u094c\u091c\u0942\u0926\u093e PIN \u0938\u0947 \u090f\u0928\u094d\u0915\u094d\u0930\u093f\u092a\u094d\u091f\u0947\u0921 \u0939\u0948 \u0914\u0930 \u092d\u0935\u093f\u0937\u094d\u092f \u0915\u0940 \u0930\u093f\u0915\u0935\u0930\u0940 \u0915\u0947 \u0932\u093f\u090f \u091c\u0930\u0942\u0930\u0940 salt \u092d\u0940 \u0930\u0916\u0924\u093e \u0939\u0948\u0964 \u0930\u093f\u0938\u094d\u091f\u094b\u0930 \u0905\u092d\u0940 \u0928\u0939\u0940\u0902 \u092c\u0928\u093e \u0939\u0948; \u090f\u0928\u094d\u0915\u094d\u0930\u093f\u092a\u094d\u091f\u0947\u0921 \u0915\u0949\u092a\u0940 \u0914\u0930 \u092e\u094c\u091c\u0942\u0926\u093e \u0910\u092a \u0932\u093f\u0902\u0915 \u0938\u0902\u092d\u093e\u0932\u0915\u0930 \u0930\u0916\u0947\u0902\u0964 CSV \u092a\u0922\u093c\u0928\u0947 \u092f\u094b\u0917\u094d\u092f \u0906\u0902\u0915\u0921\u093c\u0947 \u0939\u0948\u0902, \u0907\u0938\u0947 \u0928\u093f\u091c\u0940 \u0930\u0916\u0947\u0902\u0964", "reviewH": "\u092e\u0939\u0940\u0928\u0947 \u0915\u093e \u0939\u093f\u0938\u093e\u092c", "reviewNote": "\u0907\u0938 \u092e\u0939\u0940\u0928\u0947 \u092f\u093e \u092a\u093f\u091b\u0932\u0947 \u092e\u0939\u0940\u0928\u0947: \u092e\u093e\u0932, \u092a\u0947\u092e\u0947\u0902\u091f, \u090f\u0921\u091c\u0938\u094d\u091f\u092e\u0947\u0902\u091f \u0914\u0930 \u092c\u093e\u0915\u0940\u0964", "thisMonth": "\u0907\u0938 \u092e\u0939\u0940\u0928\u0947", "lastMonth": "\u092a\u093f\u091b\u0932\u093e \u092e\u0939\u0940\u0928\u093e", "supplierLbl": "\u0938\u092a\u094d\u0932\u093e\u092f\u0930", "allSuppliers": "\u0938\u092d\u0940 \u0938\u092a\u094d\u0932\u093e\u092f\u0930", "reviewFoot": "\u092a\u0947\u092e\u0947\u0902\u091f \u0935\u0948\u0938\u0947 \u0939\u0940 \u0926\u093f\u0916\u0924\u0947 \u0939\u0948\u0902 \u091c\u0948\u0938\u0947 \u0926\u0930\u094d\u091c \u0939\u0948\u0902; \u0928\u0915\u0926 \u092f\u093e \u092a\u0947\u092e\u0947\u0902\u091f \u0915\u093e \u0924\u0930\u0940\u0915\u093e \u0905\u0928\u0941\u092e\u093e\u0928 \u0928\u0939\u0940\u0902 \u0932\u0917\u093e\u092f\u093e \u0917\u092f\u093e\u0964", "findH": "\u0916\u093e\u0924\u093e \u090f\u0902\u091f\u094d\u0930\u0940 \u0916\u094b\u091c\u0947\u0902", "findNote": "\u0930\u0915\u092e, \u0924\u093e\u0930\u0940\u0916, \u0928\u094b\u091f \u092f\u093e \u0938\u092a\u094d\u0932\u093e\u092f\u0930 \u0938\u0947 \u0916\u094b\u091c\u0947\u0902; \u0916\u0930\u0940\u0926 \u092f\u093e \u092a\u0947\u092e\u0947\u0902\u091f \u0938\u0947 \u092b\u093f\u0932\u094d\u091f\u0930 \u0915\u0930\u0947\u0902\u0964 \u0916\u094b\u091c \u0938\u093f\u0930\u094d\u092b \u0938\u0947\u0935 \u0915\u093f\u090f \u0917\u090f \u091f\u0947\u0915\u094d\u0938\u094d\u091f \u092e\u0947\u0902 \u0939\u094b\u0924\u0940 \u0939\u0948, OCR \u0928\u0939\u0940\u0902\u0964", "searchPh": "\u0930\u0915\u092e, \u0924\u093e\u0930\u0940\u0916, \u0928\u094b\u091f \u092f\u093e \u0938\u092a\u094d\u0932\u093e\u092f\u0930", "filterAria": "\u0939\u093f\u0938\u094d\u091f\u094d\u0930\u0940 \u0915\u093e \u092a\u094d\u0930\u0915\u093e\u0930 \u092b\u093f\u0932\u094d\u091f\u0930 \u0915\u0930\u0947\u0902", "allEntries": "\u0938\u092d\u0940 \u090f\u0902\u091f\u094d\u0930\u0940", "purchases": "\u092e\u093e\u0932 (\u0916\u0930\u0940\u0926)", "paymentsF": "\u092a\u0947\u092e\u0947\u0902\u091f", "adjustmentsF": "\u090f\u0921\u091c\u0938\u094d\u091f\u092e\u0947\u0902\u091f", "noMatch": "\u0915\u094b\u0908 \u090f\u0902\u091f\u094d\u0930\u0940 \u0928\u0939\u0940\u0902 \u092e\u093f\u0932\u0940\u0964 \u0926\u0942\u0938\u0930\u0940 \u0930\u0915\u092e, \u0924\u093e\u0930\u0940\u0916, \u0928\u094b\u091f \u092f\u093e \u092a\u094d\u0930\u0915\u093e\u0930 \u0906\u091c\u093c\u092e\u093e\u090f\u0902\u0964", "viewBill": "\u092c\u093f\u0932 \u0926\u0947\u0916\u0947\u0902", "hideBill": "\u092c\u093f\u0932 \u091b\u0941\u092a\u093e\u090f\u0902", "amtPh": "\u0930\u0915\u092e \u20b9", "amtAria": "\u0930\u0915\u092e", "go": "\u091c\u093e\u090f\u0902", "amtErr": "\u0930\u0915\u092e \u20b90 \u0938\u0947 \u091c\u093c\u094d\u092f\u093e\u0926\u093e \u0921\u093e\u0932\u0947\u0902", "mOpen": "\u0913\u092a\u0928\u093f\u0902\u0917 \u092c\u0948\u0932\u0947\u0902\u0938", "mGoods": "\u092e\u093e\u0932 \u0906\u092f\u093e", "mPay": "\u092a\u0947\u092e\u0947\u0902\u091f \u0939\u0941\u0908", "mAdj": "\u090f\u0921\u091c\u0938\u094d\u091f\u092e\u0947\u0902\u091f", "mClose": "\u0915\u094d\u0932\u094b\u091c\u093f\u0902\u0917 \u092c\u0948\u0932\u0947\u0902\u0938", "lock": "\u0932\u0949\u0915", "enterPin": "PIN \u0921\u093e\u0932\u0915\u0930 \u0916\u094b\u0932\u0947\u0902", "unlock": "\u0905\u0928\u0932\u0949\u0915 \u0915\u0930\u0947\u0902", "unlocking": "\u0905\u0928\u0932\u0949\u0915 \u0939\u094b \u0930\u0939\u093e \u0939\u0948...", "wrongPin": "\u0917\u0932\u0924 PIN", "couldNot": "\u0905\u0928\u0932\u0949\u0915 \u0928\u0939\u0940\u0902 \u0939\u094b \u0938\u0915\u093e", "bkLock": "\u092c\u0948\u0915\u0905\u092a \u092c\u0928\u093e\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947 \u092b\u093f\u0930 \u0938\u0947 \u0905\u0928\u0932\u0949\u0915 \u0915\u0930\u0947\u0902\u0964", "bkFail": "\u092c\u0948\u0915\u0905\u092a \u0928\u0939\u0940\u0902 \u092c\u0928 \u0938\u0915\u093e\u0964 \u0915\u094b\u0908 \u092b\u093e\u0907\u0932 \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0928\u0939\u0940\u0902 \u0939\u0941\u0908\u0964"}:{};var HINAMES={"nuasad bhai Paragon Footwear": "\u0928\u0941\u0938\u093e\u0926 \u092d\u093e\u0908 \u092a\u0948\u0930\u093e\u0917\u0949\u0928 \u092b\u0941\u091f\u0935\u093f\u092f\u0930", "Amin Bhai Golden Boot House": "\u0905\u092e\u0940\u0928 \u092d\u093e\u0908 \u0917\u094b\u0932\u094d\u0921\u0928 \u092c\u0942\u091f \u0939\u093e\u0909\u0938", "mohsin Bhai Garden Paratwada": "\u092e\u094b\u0939\u0938\u093f\u0928 \u092d\u093e\u0908 \u0917\u093e\u0930\u094d\u0921\u0928 \u092a\u0930\u0924\u0935\u093e\u0921\u093c\u093e", "Shoeb bhai opplo footwear": "\u0936\u094b\u090f\u092c \u092d\u093e\u0908 \u0913\u092a\u094d\u0932\u094b \u092b\u0941\u091f\u0935\u093f\u092f\u0930"};function dname(n){return LANG==='hi'&&HINAMES[n]?HINAMES[n]:n};var L=LANG==='hi'?{"opening": "\u0913\u092a\u0928\u093f\u0902\u0917 \u092c\u0948\u0932\u0947\u0902\u0938", "maal": "\u092e\u093e\u0932 \u0906\u092f\u093e", "payment": "\u092a\u0947\u092e\u0947\u0902\u091f \u0939\u0941\u0906", "kata": "\u090f\u0921\u091c\u0938\u094d\u091f\u092e\u0947\u0902\u091f"}:{opening:'Opening Balance',maal:'Goods Received',payment:'Payment Made',kata:'Adjusted'};
+var monthOffset=0,nextKey='rbh_next_payment_v1';
+function nextDates(){try{return JSON.parse(localStorage.getItem(nextKey)||'{}')}catch(x){return{}}}
+function dateISO(v){var m=String(v||'').match(/^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{4})$/);if(m){var a=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'],ix=a.indexOf(m[2].slice(0,3).toLowerCase());return ix<0?null:new Date(+m[3],ix,+m[1])}var d=new Date(v);return isNaN(d.getTime())?null:new Date(d.getFullYear(),d.getMonth(),d.getDate())}
+function prettyDate(v){var d=dateISO(v);return d?d.toLocaleDateString(LANG==='hi'?'hi-IN':'en-GB',{day:'numeric',month:'short',year:'numeric'}):v}
+function refreshMonth(){var sel=document.getElementById('monthParty'),box=document.getElementById('monthRows'),lab=document.getElementById('monthLabel');if(!sel||!box||!lab)return;var n=new Date(),st=new Date(n.getFullYear(),n.getMonth()+monthOffset,1),en=new Date(st.getFullYear(),st.getMonth()+1,1);lab.textContent=st.toLocaleDateString(LANG==='hi'?'hi-IN':'en-GB',{month:'long',year:'numeric'});var ps=sel.value==='all'?PARTIES:PARTIES.filter(function(p){return p.name===sel.value}),opening=0,goods=0,payments=0,adjustments=0;ps.forEach(function(p){p.entries.forEach(function(e){var d=dateISO(e.date);if(e.type==='opening'){opening+=e.amount;return}if(!d)return;if(d<st)opening+=sg(e);else if(d<en){if(e.type==='maal')goods+=e.amount;else if(e.type==='payment')payments+=e.amount;else if(e.type==='kata')adjustments+=e.amount}})});var close=opening+goods-payments-adjustments;box.innerHTML='<div><span>'+(TR.mOpen||'Opening balance')+'</span><b>'+inr(opening)+'</b></div><div><span>'+(TR.mGoods||'Goods received')+'</span><b>'+inr(goods)+'</b></div><div><span>'+(TR.mPay||'Payments made')+'</span><b>'+inr(payments)+'</b></div><div><span>'+(TR.mAdj||'Adjustments')+'</span><b>'+inr(adjustments)+'</b></div><div class="month-close"><span>'+(TR.mClose||'Closing balance')+'</span><b>'+inr(close)+'</b></div>'}
+function globalSearch(){var inp=document.getElementById('historySearch'),q=(inp?inp.value:'').trim().toLowerCase(),compact=q.replace(/[,₹\s]/g,''),kind=(document.getElementById('historyKind')||{}).value||'all',out=document.getElementById('searchResults');if(!out)return;var a=[];PARTIES.forEach(function(p,pi){p.entries.forEach(function(e,ei){var label=L[e.type]||e.type,cat=e.type==='maal'?'purchase':e.type==='payment'?'payment':e.type==='kata'?'adjusted':'opening',text=(p.name+' '+e.date+' '+e.amount+' '+inr(e.amount)+' '+(e.note||'')+' '+label+' '+cat).toLowerCase(),plain=text.replace(/[,₹\s]/g,'');if((!q||text.indexOf(q)>-1||plain.indexOf(compact)>-1)&&(kind==='all'||kind===cat))a.push({p:p,e:e,pi:pi,ei:ei,label:label})})});a.sort(function(x,y){return (dateISO(y.e.date)||new Date(0))-(dateISO(x.e.date)||new Date(0))});var c=document.getElementById('historyCount');if(c)c.textContent=a.length+(LANG==='hi'?' एंट्री मिलीं':' matching '+(a.length===1?'entry':'entries'));out.innerHTML=a.length?a.map(function(x){return '<li class="search-result"><div class="h-top"><span class="h-type">'+esc(x.label)+'</span><span>'+esc(x.e.date)+'</span></div><div class="search-name">'+esc(dname(x.p.name))+'</div><div class="h-amt">'+(sg(x.e)<0?'− ':'')+inr(x.e.amount)+'</div>'+(x.e.note?'<div class="h-note">'+esc(x.e.note)+'</div>':'')+(x.e.bill?'<button class="btn bill" data-src="bills/'+esc(x.e.bill)+'">'+(TR.viewBill||'View Bill')+'</button>':'')+'</li>'}).join(''):'<li class="history-empty">'+(TR.noMatch||'No matching entries. Try another amount, date, note or type.')+'</li>'}
+function inr(n){return '\u20B9'+n.toLocaleString('en-IN')}
+function sg(e){return e.type==='payment'||e.type==='kata'?-e.amount:e.amount}
+function bal(es){var s=0;es.forEach(function(e){s+=sg(e)});return s}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function sum(es,t){var s=0;es.forEach(function(e){if(t.indexOf(e.type)>-1)s+=e.amount});return s}
+var SIG='\n\nFrom: Raja Boot House, Dharni';
+function wa(p,txt){return 'https://wa.me/'+p.phone.replace(/\D/g,'')+'?text='+encodeURIComponent(txt)}
+function pendingBannerVisible(e){var d=dateISO(e.date);if(!d)return false;var expiry=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1),today=new Date();today.setHours(0,0,0,0);return today<=expiry}
+var sentMarkKey='rbh_sent_v1';
+function sentMarks(){try{return JSON.parse(localStorage.getItem(sentMarkKey)||'[]')}catch(x){return[]}}
+function entryKey(p,e){return [p.name,e.date,e.type,e.amount].join('|')}
+function isSent(p,e){return !!e.sent||!!e.dismissed||sentMarks().indexOf(entryKey(p,e))>-1}
+function pend(p,pi){
+ var run=0,out='';
+ p.entries.forEach(function(e,j){run+=sg(e);if((e.type!=='payment'&&e.type!=='maal')||isSent(p,e)||!pendingBannerVisible(e))return;
+  var t=run===0&&e.type==='payment'?'Dear '+p.short+', your payment has been received in full. Your account is now clear (balance \u20B90). Thank you.'+SIG
+   :e.type==='payment'?'Dear '+p.short+', '+inr(e.amount)+' has been paid towards your account today. Remaining balance: '+inr(run)+'. Thank you.'+SIG
+   :'Dear '+p.short+', we have received a new purchase of '+inr(e.amount)+' from you. Total outstanding: '+inr(run)+'.'+SIG;
+  out+='<a class=\"pend\" data-sk=\"'+esc(entryKey(p,e))+'\" target=\"_blank\" rel=\"noopener\" href=\"'+esc(wa(p,t))+'\"><span>'+(TR.pendReady||'WhatsApp message ready - not sent')+'</span><b>'+(TR.openWa||'OPEN WHATSAPP')+'</b></a>'});
+ return out}
+function party(p,i){
+ var b=bal(p.entries),run=0,rows=p.entries.map(function(e){run+=sg(e);return{e:e,r:run}}).reverse();
+ var h=rows.map(function(x){var e=x.e;return '<li><div class="h-top"><span>'+esc(e.date)+'</span><span class="h-type">'+L[e.type]+'</span></div><div class="h-amt">'+(sg(e)<0?'\u2212 ':'')+inr(e.amount)+'</div><div class="h-bal">'+(TR.balanceLabel||'Balance: ')+'<b'+(x.r===0?' class="clear"':'')+'>'+inr(x.r)+'</b>'+(x.r===0?' <span class="pill">\u2713 '+(TR.clearTick||'CLEAR')+'</span>':'')+'</div>'+(e.note?'<div class="h-note">'+esc(e.note)+'</div>':'')+(e.bill?'<button class="btn bill" data-src="bills/'+esc(e.bill)+'">'+(TR.viewBill||'View Bill')+'</button>':'')+'</li>'}).join('');
+ var w='';if(p.phone){w='<div class="wrow"><button class="btn wa" data-k="purchase" data-i="'+i+'">'+(TR.waPurchase||'WhatsApp: Purchase')+'</button><button class="btn wa" data-k="payment" data-i="'+i+'">'+(TR.waPayment||'WhatsApp: Payment Done')+'</button>';if(b>0)w+='<a class="btn wa" target="_blank" rel="noopener" href="'+esc(wa(p,'Dear '+p.short+', your pending payment of '+inr(b)+' will be cleared within this week. Thank you for your patience.'+SIG))+'">'+(TR.waNeedTime||'WhatsApp: Need Time')+'</a>';w+='<a class="btn wa" target="_blank" rel="noopener" href="'+esc(wa(p,'Dear '+p.short+', your payment has been received in full. Your account is now clear (balance \u20B90). Thank you.'+SIG))+'">'+(TR.waClear||'WhatsApp: Hisaab Clear')+'</a><form class="amt" hidden data-i="'+i+'"><input type="text" inputmode="numeric" pattern="[0-9]*" placeholder="'+(TR.amtPh||'Amount \u20B9')+'" aria-label="'+(TR.amtAria||'Amount')+'"><button class="btn" type="submit">'+(TR.go||'Go')+'</button><p class="amsg" hidden></p></form></div>'}
+ var next=nextDates(),saved=next[p.name]||'',rem=b>0?'<section class="next-box"><p class="next-title">'+(TR.nextTitle||'Next payment date')+'</p>'+(saved?'<p class="next-saved">'+(TR.nextSaved||'Next payment: ')+esc(prettyDate(saved))+'</p>':'')+'<input type="date" aria-label="'+(TR.nextAria||'Next payment date for ')+esc(dname(p.name))+'" value="'+esc(saved)+'" data-next-input="'+i+'"><div class="next-actions"><button class="btn" type="button" data-next-save="'+i+'">'+(TR.saveDate||'Save date')+'</button>'+(saved?'<button class="btn" type="button" data-next-clear="'+i+'">'+(TR.clearDate||'Clear date')+'</button>':'')+'</div><p class="next-help">'+(TR.nextHelp||'Saved on this phone for your reference only. No supplier message is sent.')+'</p></section>':'';
+ return '<div class="card">'+(p.phone?pend(p,i):'')+'<details class="party"><summary><span class="p-name"><span class="num">'+(i+1)+'</span>'+esc(dname(p.name))+'</span><span class="p-bal"><small>'+(TR.toPay||'To Pay')+'</small><b class="'+(b>0?'due':'clear')+'">'+inr(b)+'</b>'+(b===0?'<span class="pill">\u2713 '+(TR.clearTick||'CLEAR')+'</span>':'')+'</span></summary><div class="p-body"><div class="p-sum"><div><small>'+(TR.goodsReceived||'Goods Received')+'</small><b>'+inr(sum(p.entries,['opening','maal']))+'</b></div><div><small>'+(TR.paymentMade||'Payment Made')+'</small><b>'+inr(sum(p.entries,['payment']))+'</b></div><div><small>'+(TR.adjusted||'Adjusted')+'</small><b>'+inr(sum(p.entries,['kata']))+'</b></div><div><small>'+(TR.balanceSm||'Balance')+'</small><b>'+inr(b)+'</b></div></div><ol class="hist">'+h+'</ol></div></details>'+rem+w+'</div>'
+}
+function render(){
+ var T=0;PARTIES.forEach(function(p){T+=bal(p.entries)});
+ document.getElementById('app').innerHTML='<h1>'+(TR.appTitle||'RBH KHATA BOOK')+'</h1><p class="upd">'+(TR.updated||'Updated: ')+UPDATED+'</p><nav class="main-tabs" aria-label="Main sections"><button type="button" class="btn active" data-tab="home">'+(TR.tabHome||'Home')+'</button><button type="button" class="btn" data-tab="review">'+(TR.tabReview||'Monthly Review')+'</button></nav><section id="homeView"><section class="total"><small>'+(TR.totalPayable||'Total Payable')+'</small><b>'+inr(T)+'</b></section><div class="parties">'+PARTIES.map(party).join('')+'</div><section class="feature backup-feature"><h2>'+(TR.backupH||'Backup and export')+'</h2><p class="feature-note">'+(TR.backupNote1||'Encrypted backup uses the existing PIN. CSV export contains readable supplier and transaction details. Keep it private; anyone with the file can read it.')+'</p><div class="backup-actions"><button type="button" class="btn" data-export="backup">'+(TR.dlBackup||'Download encrypted backup')+'</button><button type="button" class="btn" data-export="csv">'+(TR.exportCsv||'Export CSV')+'</button></div><p class="next-help">'+(TR.backupNote2||'Backup is encrypted with the existing PIN and includes the salt needed for future recovery. Restore is not built yet; keep the encrypted copy and current app link safe. CSV is readable financial data, so store it privately.')+'</p></section></section><section id="reviewView" hidden><section class="feature"><h2>'+(TR.reviewH||'Monthly Review')+'</h2><p class="feature-note">'+(TR.reviewNote||'This month or last month: goods received, payments, adjustments and balances.')+'</p><div class="month-buttons"><button type="button" class="btn active" data-month="0">'+(TR.thisMonth||'This month')+'</button><button type="button" class="btn" data-month="-1">'+(TR.lastMonth||'Last month')+'</button></div><p id="monthLabel" class="month-heading"></p><label for="monthParty">'+(TR.supplierLbl||'Supplier')+'</label><select id="monthParty"><option value="all">'+(TR.allSuppliers||'All suppliers')+'</option>'+PARTIES.map(function(p){return '<option value="'+esc(p.name)+'">'+esc(dname(p.name))+'</option>'}).join('')+'</select><div id="monthRows" class="month-grid"></div><p class="next-help">'+(TR.reviewFoot||'Payments are shown as recorded; no cash or payment method is assumed.')+'</p></section><section class="feature"><h2>'+(TR.findH||'Find a ledger entry')+'</h2><p class="feature-note">'+(TR.findNote||'Search by amount, date, note or supplier; filter by purchase or payment. Search uses saved text only, no OCR.')+'</p><div class="filter-row"><input id="historySearch" type="search" placeholder="'+(TR.searchPh||'Amount, date, note or supplier')+'" autocomplete="off"><select id="historyKind" aria-label="'+(TR.filterAria||'Filter history type')+'"><option value="all">'+(TR.allEntries||'All entries')+'</option><option value="purchase">'+(TR.purchases||'Purchases')+'</option><option value="payment">'+(TR.paymentsF||'Payments')+'</option><option value="adjusted">'+(TR.adjustmentsF||'Adjustments')+'</option></select></div><p id="historyCount" class="history-count"></p><ol id="searchResults" class="search-results"></ol></section></section><p class="ver">v15 · <a href="#" id="lk">'+(TR.lock||'Lock')+'</a> · <a href="#" id="lg">'+(LANG==='hi'?'English':'हिंदी')+'</a></p>';refreshMonth();globalSearch();
+}
+function setTab(name){var home=document.getElementById('homeView'),review=document.getElementById('reviewView');if(!home||!review)return;home.hidden=name!=='home';review.hidden=name!=='review';document.querySelectorAll('[data-tab]').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-tab')===name)});if(name==='review'){refreshMonth();globalSearch()}}
+function csvCell(v){var s=String(v==null?'':v);if(typeof v==='string'&&/^[\t\r\n ]*[=+\-@]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}
+function downloadFile(name,type,text){var a=document.createElement('a'),blob=new Blob([text],{type:type}),url=URL.createObjectURL(blob);a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},1000)}
+function exportCsv(){var rows=[['Supplier','Phone','Type','Date','Amount INR','Running balance INR','Note','Bill reference']];PARTIES.forEach(function(p){var run=0;p.entries.forEach(function(e){run+=sg(e);rows.push([p.name,p.phone||'',L[e.type]||e.type,e.date,e.amount,run,e.note||'',e.bill||''])})});downloadFile('rbh-khata-ledger-'+new Date().toISOString().slice(0,10)+'.csv','text/csv;charset=utf-8','\uFEFF'+rows.map(function(r){return r.map(csvCell).join(',')}).join('\r\n'))}
+function exportBackup(){var raw;try{raw=localStorage.getItem('rbh_k')}catch(x){}if(!raw){alert(TR.bkLock||'Unlock again before making a backup.');return}var key=crypto.subtle.importKey('raw',b2u(raw),'AES-GCM',false,['encrypt']),iv=crypto.getRandomValues(new Uint8Array(12)),data=new TextEncoder().encode(JSON.stringify({u:UPDATED,p:PARTIES}));key.then(function(k){return crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,data)}).then(function(buf){downloadFile('rbh-khata-encrypted-backup-'+new Date().toISOString().slice(0,10)+'.json','application/json',JSON.stringify({format:'RBH-KHATA-ENCRYPTED-BACKUP',version:1,createdAt:new Date().toISOString(),salt:BLOB.s,iterations:IT,iv:u2b(iv),ciphertext:u2b(new Uint8Array(buf))},null,2))}).catch(function(){alert(TR.bkFail||'Backup failed. No file was downloaded.')})}
+document.addEventListener('input',function(ev){if(ev.target&&ev.target.id==='historySearch')globalSearch()});
+document.addEventListener('change',function(ev){if(ev.target&&ev.target.id==='historyKind')globalSearch();if(ev.target&&ev.target.id==='monthParty')refreshMonth()});
+document.addEventListener('click',function(ev){var tab=ev.target.closest&&ev.target.closest('button[data-tab]');if(tab){setTab(tab.getAttribute('data-tab'));return}var ex=ev.target.closest&&ev.target.closest('button[data-export]');if(ex){if(ex.getAttribute('data-export')==='csv')exportCsv();else exportBackup();return}var m=ev.target.closest&&ev.target.closest('button[data-month]');if(m){monthOffset=+m.getAttribute('data-month');document.querySelectorAll('button[data-month]').forEach(function(x){x.classList.toggle('active',x===m)});refreshMonth();return}var save=ev.target.closest&&ev.target.closest('button[data-next-save]'),clear=ev.target.closest&&ev.target.closest('button[data-next-clear]');if(save||clear){var i=+(save||clear).getAttribute(save?'data-next-save':'data-next-clear'),p=PARTIES[i],map=nextDates();if(clear)delete map[p.name];else{var inp=document.querySelector('input[data-next-input="'+i+'"]');if(!inp||!inp.value)return;map[p.name]=inp.value}try{localStorage.setItem(nextKey,JSON.stringify(map))}catch(x){}render();return}});
+document.addEventListener('click',function(ev){
+ var b=ev.target.closest&&ev.target.closest('.bill');if(!b)return;
+ var n=b.nextElementSibling;
+ if(n&&n.tagName==='IMG'){n.remove();b.textContent=TR.viewBill||'View Bill';return}
+ var i=document.createElement('img');i.className='bill-img';i.alt='Bill';i.src=b.getAttribute('data-src');b.after(i);b.textContent=TR.hideBill||'Hide Bill'});
+document.addEventListener('click',function(ev){
+ var t=ev.target.closest&&ev.target.closest('button[data-k]');if(!t)return;
+ var row=t.parentNode,f=row.querySelector('.amt');
+ if(!f.hidden&&f.getAttribute('data-k')===t.getAttribute('data-k')){f.hidden=true;return}
+ f.hidden=false;f.setAttribute('data-k',t.getAttribute('data-k'));
+ Array.prototype.forEach.call(row.querySelectorAll('button[data-k]'),function(x){x.classList.toggle('on',x===t)});
+ var inp=f.querySelector('input');inp.value='';inp.focus();
+});
+document.addEventListener('click',function(ev){
+ var a=ev.target.closest&&ev.target.closest('a.pend');if(!a)return;
+ var k=a.getAttribute('data-sk');if(!k)return;
+ var m=sentMarks();if(m.indexOf(k)<0){m.push(k);try{localStorage.setItem(sentMarkKey,JSON.stringify(m))}catch(x){}}
+ a.style.display='none'});
+document.addEventListener('submit',function(ev){
+ var f=ev.target;if(!f.classList.contains('amt'))return;ev.preventDefault();
+ var p=PARTIES[+f.getAttribute('data-i')],k=f.getAttribute('data-k'),inp=f.querySelector('input');
+ var n=parseInt(inp.value.replace(/[^0-9]/g,''),10);
+ var b=bal(p.entries),txt,mg=f.querySelector('.amsg');mg.hidden=true;
+ function bad(m){mg.textContent=m;mg.hidden=false;inp.focus()}
+ if(!n||n<1)return bad(TR.amtErr||'Enter an amount greater than \u20B90');
+ if(k==='payment'&&n>b)return bad('Payment balance ('+inr(b)+') se zyada nahi ho sakti');
+ if(k==='payment')txt='Dear '+p.short+', '+inr(n)+' has been paid towards your account today. Remaining balance: '+inr(b-n)+'. Thank you.'+SIG;
+ else txt='Dear '+p.short+', we have received a new purchase of '+inr(n)+' from you. Total outstanding: '+inr(b+n)+'.'+SIG;
+ window.open(wa(p,txt),'_blank');
+});
+
+var IT=300000;
+function b2u(b){var s=atob(b),a=new Uint8Array(s.length);for(var i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a}
+function u2b(a){var s='';for(var i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s)}
+function dec(raw){return crypto.subtle.importKey('raw',raw,'AES-GCM',false,['decrypt']).then(function(k){return crypto.subtle.decrypt({name:'AES-GCM',iv:b2u(BLOB.i)},k,b2u(BLOB.c))}).then(function(buf){return JSON.parse(new TextDecoder().decode(buf))})}
+function wireLang(){var lg=document.getElementById('lg');if(lg)lg.addEventListener('click',function(e){e.preventDefault();try{localStorage.setItem('rbh_lang',LANG==='hi'?'en':'hi')}catch(x){}location.reload()})}
+function open_(D){UPDATED=D.u;PARTIES=D.p;document.body.className=LANG==='hi'?'hi':'';render();wireLang();var lk=document.getElementById('lk');if(lk)lk.addEventListener('click',function(e){e.preventDefault();try{localStorage.removeItem('rbh_k')}catch(x){}location.reload()})}
+function lockScreen(){
+ document.getElementById('app').innerHTML='<h1>'+(TR.appTitle||'RBH KHATA BOOK')+'</h1><form class="lock" id="lf"><p>'+(TR.enterPin||'Enter PIN to open')+'</p><input id="pin" type="password" autocomplete="off" aria-label="PIN"><p class="err" id="err"></p><button class="btn" type="submit">'+(TR.unlock||'Unlock')+'</button><p class="ver">v15 · <a href="#" id="lg">'+(LANG==='hi'?'English':'हिंदी')+'</a></p></form>';document.body.className=LANG==='hi'?'hi':'';wireLang();
+ var f=document.getElementById('lf'),pin=document.getElementById('pin'),err=document.getElementById('err');pin.focus();
+ f.addEventListener('submit',function(e){e.preventDefault();var v=pin.value;if(!v)return;err.textContent=TR.unlocking||'Unlocking...';
+  crypto.subtle.importKey('raw',new TextEncoder().encode(v),'PBKDF2',false,['deriveBits']).then(function(km){return crypto.subtle.deriveBits({name:'PBKDF2',salt:b2u(BLOB.s),iterations:IT,hash:'SHA-256'},km,256)}).then(function(bits){var raw=new Uint8Array(bits);return dec(raw).then(function(D){try{localStorage.setItem('rbh_k',u2b(raw))}catch(x){}open_(D)},function(){err.textContent=TR.wrongPin||'Wrong PIN';pin.value='';pin.focus()})}).catch(function(){err.textContent=TR.couldNot||'Could not unlock'})})}
+(function(){var k=null;try{k=localStorage.getItem('rbh_k')}catch(x){}
+ if(!k||!window.crypto||!crypto.subtle){lockScreen();return}
+ dec(b2u(k)).then(open_,lockScreen)})();
+if('serviceWorker' in navigator){
+ var had=!!navigator.serviceWorker.controller,rl=false;
+ navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=true;location.reload()}had=true});
+ navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(reg){
+  reg.update().catch(function(){});
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)reg.update().catch(function(){})});
+ }).catch(function(){});
+}
+</script></body></html>
+<script>
+
+/* ===== RBH self-entry v24: local entries, undo, restore, two-way Drive sync ===== */
+(function(){
+if(typeof open_!=='function'||typeof render!=='function')return;
+var LKEY='rbh_local_v1';
+function locals(){try{return JSON.parse(localStorage.getItem(LKEY)||'[]')}catch(x){return[]}}
+function saveLocals(a){try{localStorage.setItem(LKEY,JSON.stringify(a))}catch(x){}}
+function ck(pn,e){return [pn,e.date,e.type,e.amount,(e.note||'')].join('|')}
+function h10(s){var x=0;for(var i=0;i<s.length;i++){x=((x<<5)-x+s.charCodeAt(i))|0}return (x>>>0).toString(36)}
+var HI=(typeof LANG!=='undefined'&&LANG==='hi');
+function t(en,hi){return HI?hi:en}
+var MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function todayISO(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function isoToDisp(v){var m=String(v||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!m)return '';return (+m[3])+' '+MN[+m[2]-1]+' '+m[1]}
+TR.seUndo=t('Hatayein','हटाएं');TR.seLocal=t('on this phone','इस फोन पर');TR.seRestored=t('restored from backup','बैकअप से रिस्टोर');
+TR.backupNote2=t('Backup is encrypted with the existing PIN and includes the salt needed for future recovery. Use Restore below to bring missing entries back onto this phone. CSV is readable financial data, so store it privately.','बैकअप मौजूदा PIN से एन्क्रिप्टेड है और भविष्य की रिकवरी के लिए जरूरी जानकारी रखता है। नीचे Restore से गायब entries इस फोन पर वापस आ जाएंगी। CSV पढ़ने योग्य है, इसे निजी रखें।');
+var FS={party:0,kind:'maal',amount:'',note:'',date:todayISO(),step:'edit'};
+function kindLabel(k){return k==='maal'?t('GOODS RECEIVED (purchase)','माल आया (खरीद)'):k==='payment'?t('PAYMENT MADE','पेमेंट दिया'):t('ADJUSTMENT (kata)','कटौती (एडजस्टमेंट)')}
+function applyLocal(){
+ var ls=locals();if(!ls.length)return;
+ PARTIES.forEach(function(p){
+  var mIds={},mKeys={};
+  p.entries.forEach(function(e){if(e.id)mIds[e.id]=(mIds[e.id]||0)+1;mKeys[ck(p.name,e)]=(mKeys[ck(p.name,e)]||0)+1});
+  var sIds={},sKeys={};
+  ls.forEach(function(le){
+   if(le.party!==p.name)return;
+   if(le.id){sIds[le.id]=(sIds[le.id]||0)+1;if((mIds[le.id]||0)>=sIds[le.id])return}
+   var k0=ck(p.name,le);sKeys[k0]=(sKeys[k0]||0)+1;if((mKeys[k0]||0)>=sKeys[k0])return;
+   p.entries.push({id:le.id,date:le.date,type:le.type,amount:le.amount,note:le.note,local:true,restored:!!le.restored});
+  });
+ });
+ PARTIES.forEach(function(p){p.entries.sort(function(a,b){var da=dateISO(a.date),db=dateISO(b.date);return (da?da.getTime():0)-(db?db.getTime():0)})});
+}
+var _render=window.render;
+window.render=function(){applyLocal();_render();fixFooter();injectUI()};
+function fixFooter(){
+ var ver=document.querySelector('.ver');if(!ver)return;
+ ver.innerHTML='v28 · <a href="#" id="lk">'+t('Lock','लॉक')+'</a> · <a href="#" id="lg">'+(HI?'English':'हिंदी')+'</a>';
+ var lk2=document.getElementById('lk');if(lk2)lk2.addEventListener('click',function(e){e.preventDefault();try{localStorage.removeItem('rbh_k')}catch(x){}location.reload()});
+ var lg2=document.getElementById('lg');if(lg2)lg2.addEventListener('click',function(e){e.preventDefault();try{localStorage.setItem('rbh_lang',HI?'en':'hi')}catch(x){}location.reload()});
+}
+function afterVals(){var p=PARTIES[FS.party];if(!p)return null;var b=bal(p.entries);var n=parseInt(String(FS.amount).replace(/\D/g,''),10)||0;var nb=FS.kind==='maal'?b+n:b-n;var T=0;PARTIES.forEach(function(x,i){T+=i===FS.party?nb:bal(x.entries)});return{p:p,b:b,n:n,nb:nb,T:T}}
+function seMsg(m){var el=document.getElementById('seMsg');if(el){el.textContent=m;el.hidden=false}}
+function injectUI(){
+ var hv=document.getElementById('homeView');if(!hv||document.getElementById('seCard'))return;
+ var card=document.createElement('section');card.className='feature se-card';card.id='seCard';
+ var ls=locals();
+ var h='<h2>'+t('New entry (add yourself)','नई एंट्री (खुद हिसाब)')+'</h2>';
+ h+='<p class="feature-note">'+t('Add a purchase, payment or adjustment yourself. Totals update at once. Entries save on this phone first; send the update to Jadoo or keep a backup so the master khata matches.','खरीद, पेमेंट या कटौती खुद जोड़ें। कुल तुरंत अपडेट होगा। एंट्री पहले इस फोन पर सेव होती है; मास्टर खाता मिलान के लिए Jadoo को अपडेट भेजें या बैकअप रखें।')+'</p>';
+ if(ls.length)h+='<p class="se-banner">'+ls.length+t(' entry(s) are only on this phone so far.',' एंट्री अभी सिर्फ इस फोन पर हैं।')+'</p>';
+ if(FS.step==='edit'){
+  h+='<label for="seParty">'+t('Supplier','सप्लायर')+'</label><select id="seParty">'+PARTIES.map(function(p,i){return '<option value="'+i+'"'+(i===FS.party?' selected':'')+'>'+esc(dname(p.name))+'</option>'}).join('')+'</select>';
+  h+='<div class="se-kinds">'+['maal','payment','kata'].map(function(k){return '<button type="button" class="btn se-kind'+(FS.kind===k?' active':'')+'" data-se-kind="'+k+'">'+kindLabel(k)+'</button>'}).join('')+'</div>';
+  h+='<div class="filter-row"><input id="seAmt" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="'+t('Amount ₹','रकम ₹')+'" value="'+esc(FS.amount)+'" autocomplete="off"><input id="seDate" type="date" value="'+esc(FS.date)+'"></div>';
+  h+='<input id="seNote" type="text" placeholder="'+t('Note - item, qty, rate (e.g. sports sandal 6 pair @260)','नोट - आइटम, संख्या, रेट')+'" value="'+esc(FS.note)+'" autocomplete="off">';
+  if(FS.kind==='payment'){var av=afterVals();if(av&&av.b>0)h+='<button type="button" class="btn se-full" id="seFull">'+t('Full balance ','पूरा बैलेंस ')+inr(av.b)+'</button>'}
+  h+='<p class="se-preview" id="sePrev"></p><p class="amsg" id="seMsg" hidden></p>';
+  h+='<button type="button" class="btn se-go" id="seNext">'+t('Next','आगे बढ़ें')+'</button>';
+ }else{
+  var av=afterVals();
+  h+='<div class="se-confirm"><p><b>'+t('Check the entry:','एंट्री जांचें:')+'</b></p><p>'+esc(dname(av.p.name))+' · '+kindLabel(FS.kind)+' · '+inr(av.n)+' · '+esc(isoToDisp(FS.date))+'</p>'+(FS.note?'<p>'+esc(FS.note)+'</p>':'')+'<p>'+t('Balance after entry: ','एंट्री के बाद बैलेंस: ')+inr(av.nb)+' · '+t('Total payable: ','कुल बाकी: ')+inr(av.T)+'</p></div>';
+  h+='<p class="amsg" id="seMsg" hidden></p><div class="se-kinds"><button type="button" class="btn se-go" id="seSave">'+t('Save','सेव करें')+'</button><button type="button" class="btn" id="seBack">'+t('Back','वापस')+'</button></div>';
+ }
+ if(ls.length)h+='<p class="next-help"><a href="#" id="seSend">'+t('Send update to Jadoo (WhatsApp)','Jadoo को अपडेट भेजें (WhatsApp)')+'</a> · '+t('plain text, nothing is sent automatically','साफ टेक्स्ट, कोई अपने-आप सेंड नहीं')+'</p>';
+ card.innerHTML=h;
+ var pv=hv.querySelector('.backup-feature');hv.insertBefore(card,pv);
+ var ba=hv.querySelector('.backup-actions');
+ if(ba&&!document.getElementById('seRestoreBtn')){
+  var rb=document.createElement('button');rb.type='button';rb.className='btn';rb.id='seRestoreBtn';rb.textContent=t('Restore from backup','बैकअप से वापस लाएं');ba.appendChild(rb);
+  var fi=document.createElement('input');fi.type='file';fi.id='seRestoreFile';fi.accept='.json,application/json';fi.hidden=true;ba.appendChild(fi);
+  var fb=document.createElement('button');fb.type='button';fb.className='btn';fb.id='seFullBackup';fb.textContent=t('Full backup (incl. phone entries)','फुल बैकअप (फोन एंट्री सहित)');ba.appendChild(fb);
+  var gl=document.createElement('p');gl.className='feature-note';gl.id='seGBStatus';ba.appendChild(gl);
+  var gb=document.createElement('button');gb.type='button';gb.className='btn';gb.id='seGBBtn';gb.textContent=t('Back up to Google now','Google बैकअप अभी करें');ba.appendChild(gb);
+  var gr=document.createElement('button');gr.type='button';gr.className='btn';gr.id='seGBRestore';gr.textContent=t('Restore from Google Drive','Google ड्राइव से रिस्टोर');ba.appendChild(gr);
+  var gn=document.createElement('p');gn.className='feature-note';gn.textContent=t('The encrypted backup is saved in the hidden app folder of your Google Drive - only the backup file, Google cannot see the hisaab. Tap "Back up to Google now" after new entries; until it shows saved, they are on this phone only.','एन्क्रिप्टेड बैकअप आपके Google Drive के हिडन ऐप फोल्डर में सेव होता है। नई एंट्री के बाद "अभी Google बैकअप करें" दबाएं; जब तक सेव न दिखे, एंट्री सिर्फ इस फोन पर है।');ba.appendChild(gn);
+  setTimeout(gbStatusRender,0);
+ }
+ updPrev();
+ injectPdfButtons();
+}
+function updPrev(){
+ var el=document.getElementById('sePrev');if(!el)return;var av=afterVals();if(!av){el.textContent='';return}
+ el.textContent=av.n>0?(t('After entry: ','एंट्री के बाद: ')+esc(dname(av.p.name))+' '+inr(av.nb)+' · '+t('Total ','कुल ')+inr(av.T)):(t('Balance now: ','अभी बैलेंस: ')+esc(dname(av.p.name))+' '+inr(av.b));
+}
+document.addEventListener('input',function(ev){if(!ev.target)return;if(ev.target.id==='seAmt'){FS.amount=ev.target.value.replace(/[^\d]/g,'');updPrev()}if(ev.target.id==='seNote')FS.note=ev.target.value});
+document.addEventListener('change',function(ev){if(!ev.target)return;
+ if(ev.target.id==='seParty'){FS.party=+ev.target.value;render()}
+ if(ev.target.id==='seDate'){FS.date=ev.target.value||todayISO()}
+ if(ev.target.id==='seRestoreFile'&&ev.target.files&&ev.target.files[0]){var f0=ev.target.files[0];ev.target.value='';doRestore(f0)}
+});
+document.addEventListener('click',function(ev){
+ var k=ev.target.closest&&ev.target.closest('[data-se-kind]');if(k){FS.kind=k.getAttribute('data-se-kind');render();return}
+ if(ev.target.closest&&ev.target.closest('#seFull')){var av=afterVals();if(av){FS.amount=String(av.b)}render();return}
+ if(ev.target.closest&&ev.target.closest('#seNext')){
+  var av2=afterVals();var m=document.getElementById('seMsg');
+  function bad2(s){if(m){m.textContent=s;m.hidden=false}}
+  if(!av2||av2.n<1)return bad2(t('Enter an amount greater than ₹0','₹0 से ज्यादा रकम डालें'));
+  if(FS.kind!=='maal'&&av2.n>av2.b)return bad2(t('Balance after payment/adjustment (','पेमेंट/कटौती बैलेंस (')+inr(av2.b)+t(') - cannot be more',') से ज्यादा नहीं हो सकती'));
+  if(!isoToDisp(FS.date))return bad2(t('Check the date','तारीख जांचें'));
+  FS.step='confirm';render();return}
+ if(ev.target.closest&&ev.target.closest('#seBack')){FS.step='edit';render();return}
+ if(ev.target.closest&&ev.target.closest('#seSave')){
+  var av3=afterVals();if(!av3||av3.n<1)return;
+  var le={id:'L'+Date.now().toString(36)+Math.floor(Math.random()*1296).toString(36),party:av3.p.name,type:FS.kind,amount:av3.n,date:isoToDisp(FS.date),note:FS.note||''};
+  var a=locals();a.push(le);saveLocals(a);gbMarkPending();
+  FS={party:FS.party,kind:'maal',amount:'',note:'',date:todayISO(),step:'edit'};
+  gbUpload(function(){location.reload()});setTimeout(function(){location.reload()},12000);return}
+ var un=ev.target.closest&&ev.target.closest('[data-se-undo]');if(un){
+  var id=un.getAttribute('data-se-undo');
+  if(un.getAttribute('data-arm')!=='1'){un.setAttribute('data-arm','1');un.textContent=t('Sure? Tap again to confirm','पक्का? दोबारा दबाएं');setTimeout(function(){try{un.setAttribute('data-arm','0');un.textContent=t('Hatayein','हटाएं')}catch(x){}},4000);return}
+  saveLocals(locals().filter(function(x){return x.id!==id}));location.reload();return}
+ var sd=ev.target.closest&&ev.target.closest('#seSend');if(sd){
+  ev.preventDefault();
+  var ls2=locals();if(!ls2.length)return;
+  var lines=['RBH KHATA phone entries (Jadoo ke liye):'];
+  ls2.forEach(function(le,i){lines.push((i+1)+') '+le.date+' | '+le.party+' | '+le.type.toUpperCase()+' | Rs '+le.amount+' | '+(le.note||'-')+' | id '+le.id)});
+  var T=0;PARTIES.forEach(function(p){T+=bal(p.entries)});
+  PARTIES.forEach(function(p){lines.push(dname(p.name)+': Rs '+bal(p.entries))});
+  lines.push('TOTAL: Rs '+T);
+  window.open('https://wa.me/?text='+encodeURIComponent(lines.join('\n')),'_blank');return}
+ if(ev.target.closest&&ev.target.closest('#seRestoreBtn')){var f=document.getElementById('seRestoreFile');if(f)f.click();return}
+ if(ev.target.closest&&ev.target.closest('#seFullBackup')){dlFullBackup();return}
+});
+function mergePayload(D){
+ var haveIds={},haveKeys={};
+ PARTIES.forEach(function(p){p.entries.forEach(function(e){haveKeys[ck(p.name,e)]=(haveKeys[ck(p.name,e)]||0)+1;if(e.id)haveIds['id:'+e.id]=(haveIds['id:'+e.id]||0)+1})});
+ locals().forEach(function(le){haveKeys[ck(le.party,le)]=(haveKeys[ck(le.party,le)]||0)+1;if(le.id)haveIds['id:'+le.id]=(haveIds['id:'+le.id]||0)+1});
+ var add=[],seenIds={},seenKeys={};
+ (D.p||[]).forEach(function(p){(p.entries||[]).forEach(function(e){
+  if(e.id){var ik='id:'+e.id;seenIds[ik]=(seenIds[ik]||0)+1;if((haveIds[ik]||0)>=seenIds[ik])return}
+  var k=ck(p.name,e);seenKeys[k]=(seenKeys[k]||0)+1;if((haveKeys[k]||0)>=seenKeys[k])return;
+  add.push({id:e.id||('R'+h10(k)+'x'+seenKeys[k]),party:p.name,date:e.date,type:e.type,amount:e.amount,note:e.note||'',restored:true});
+ })});
+ var locIds={};locals().forEach(function(le){if(le.id)locIds[le.id]=1});
+ var seenLKeys={};
+ (D.local||[]).forEach(function(le){
+  if(le.id&&locIds[le.id])return;
+  if(le.id&&haveIds['id:'+le.id])return;
+  var lk=ck(le.party,le);seenLKeys[lk]=(seenLKeys[lk]||0)+1;if((haveKeys[lk]||0)>=seenLKeys[lk])return;
+  add.push({id:le.id||('L'+h10(le.party+le.date+le.type+le.amount+(le.note||''))),party:le.party,date:le.date,type:le.type,amount:le.amount,note:le.note||'',restored:true});
+ });
+ return add;
+}
+function rMsg(m){var el=document.getElementById('seRestoreMsg');if(!el){var ba=document.querySelector('.backup-actions');if(!ba)return;el=document.createElement('p');el.id='seRestoreMsg';el.className='next-help';ba.parentNode.appendChild(el)}el.textContent=m;el.hidden=false}
+var restoring=false;
+function doRestore(file){
+ if(restoring)return;restoring=true;
+ rMsg(t('Opening backup...','बैकअप खुल रहा है...'));
+ var rd=new FileReader();
+ rd.onload=function(){
+  var o;try{o=JSON.parse(rd.result)}catch(x){restoring=false;return rMsg(t('Could not read that file.','फाइल समझ नहीं आई।'))}
+  if(!o||o.format!=='RBH-KHATA-ENCRYPTED-BACKUP'){restoring=false;return rMsg(t('This is not an RBH backup file.','यह RBH बैकअप फाइल नहीं है।'))}
+  var raw;try{raw=localStorage.getItem('rbh_k')}catch(x){}
+  if(!raw){restoring=false;return rMsg(t('Unlock the app with the PIN first, then restore.','पहले ऐप PIN से खोलें, फिर रिस्टोर करें।'))}
+  var keyP=Promise.resolve(b2u(raw));
+  keyP.then(function(rawKey){return crypto.subtle.importKey('raw',rawKey,'AES-GCM',false,['decrypt']).then(function(k){return crypto.subtle.decrypt({name:'AES-GCM',iv:b2u(o.iv)},k,b2u(o.ciphertext))})}).then(function(buf){
+   var D=JSON.parse(new TextDecoder().decode(buf));
+   var add=mergePayload(D);
+   if(!add.length){restoring=false;rMsg(t('Backup ki sab entries yahan maujood hain. Kuch naya nahi joda.','बैकअप की सब एंट्री यहां मौजूद हैं। कुछ नया नहीं जोड़ा।'));return}
+   saveLocals(locals().concat(add));gbMarkPending();
+   rMsg(add.length+t(' entries added from backup. Reloading.',' एंट्री बैकअप से जोड़ी गई। पेज रीलोड हो रहा है।'));
+   setTimeout(function(){location.reload()},1500);
+  }).catch(function(){restoring=false;rMsg(t('Backup did not open - check the file.','बैकअप नहीं खुला - फाइल जांचें।'))});
+ };
+ rd.readAsText(file);
+}
+/* ===== PDF export: client-side, no library, direct download ===== */
+function pdfClean(s){return String(s==null?'':s).replace(/₹/g,'Rs ').replace(/[^\x20-\x7E]/g,'?')}
+function pdfRs(n){return pdfClean(inr(n))}
+function pdfWrap(s,w){var words=pdfClean(s).split(/\s+/),lines=[],cur='';words.forEach(function(wd){if((cur+' '+wd).trim().length>w){if(cur)lines.push(cur);cur=wd}else cur=(cur?cur+' ':'')+wd});if(cur)lines.push(cur);return lines.length?lines:['']}
+function pdfPages(opsPerPage){
+ var out='%PDF-1.4\n',offs=[],nPages=opsPerPage.length;
+ function obj(num,bd){offs[num]=out.length;out+=num+' 0 obj\n'+bd+'\nendobj\n'}
+ var kids=[];for(var i=0;i<nPages;i++)kids.push((5+2*i)+' 0 R');
+ obj(1,'<< /Type /Catalog /Pages 2 0 R >>');
+ obj(2,'<< /Type /Pages /Kids ['+kids.join(' ')+'] /Count '+nPages+' >>');
+ obj(3,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>');
+ obj(4,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>');
+ opsPerPage.forEach(function(ops,i){
+  var pn=5+2*i,cn=6+2*i;
+  obj(pn,'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /CropBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents '+cn+' 0 R >>');
+  var s='';ops.forEach(function(o){
+   if(o.line){s+=o.x1+' '+o.y1+' m '+o.x2+' '+o.y2+' l S\n';return}
+   var tx=pdfClean(o.s).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)');
+   s+='BT /'+(o.b?'F2':'F1')+' '+(o.z||10)+' Tf 1 0 0 1 '+o.x+' '+o.y+' Tm ('+tx+') Tj ET\n';
+  });
+  obj(cn,'<< /Length '+s.length+' >>\nstream\n'+s+'endstream');
+ });
+ var xoff=out.length;
+ out+='xref\n0 '+(5+2*nPages)+'\n0000000000 65535 f \n';
+ for(var j=1;j<5+2*nPages;j++){var o2=offs[j]||0;out+=String(10000000000+o2).slice(-10)+' 00000 n \n'}
+ out+='trailer\n<< /Size '+(5+2*nPages)+' /Root 1 0 R >>\nstartxref\n'+xoff+'\n%%EOF';
+ return out;
+}
+function partySums(p){var m=0,o=0,pd=0,a=0;p.entries.forEach(function(e){if(e.type==='maal')m+=e.amount;else if(e.type==='opening')o+=e.amount;else if(e.type==='payment')pd+=e.amount;else if(e.type==='kata')a+=e.amount});var g=m+o;return{m:m,o:o,g:g,p:pd,a:a,b:g-pd-a}}
+function pdfType(t2){return t2==='maal'?'Maal aaya':t2==='payment'?'Payment diya':t2==='kata'?'Kata (adjustment)':'Opening'}
+function supplierOps(p,ops){
+ var s=partySums(p);
+ var fd=p.entries.length?p.entries.slice().sort(function(a,b){var da=dateISO(a.date),db=dateISO(b.date);return (da?da.getTime():0)-(db?db.getTime():0)})[0].date:'';
+ ops.push({x:50,y:780,z:16,b:1,s:'RBH KHATA BOOK'});
+ ops.push({x:50,y:762,z:11,s:'Hisaab: '+pdfClean(dname(p.name))+'    Nikala gaya: '+pdfClean(isoToDisp(todayISO()))});
+ ops.push({x:50,y:746,z:10,b:1,s:'Maal: '+pdfRs(s.m)+'   Opening: '+pdfRs(s.o)+'   Payment: '+pdfRs(s.p)+'   Kata: '+pdfRs(s.a)+'   Baaki: '+pdfRs(s.b)});
+ ops.push({x:50,y:734,z:8.5,s:'Baaki = Maal + Opening - Payment - Kata   |   App record '+pdfClean(fd)+' se aaj tak'});
+ ops.push({line:true,x1:50,y1:726,x2:545,y2:726});
+ ops.push({x:50,y:712,z:10,b:1,s:'Date'});ops.push({x:130,y:712,z:10,b:1,s:'Entry'});ops.push({x:375,y:712,z:10,b:1,s:'Rakam'});ops.push({x:460,y:712,z:10,b:1,s:'Balance'});
+ ops.push({line:true,x1:50,y1:704,x2:545,y2:704});
+ return 690;
+}
+function partyPages(p){
+ var pages=[],ops=[],y=supplierOps(p,ops),run=0;
+ var es=p.entries.slice().sort(function(a,b){var da=dateISO(a.date),db=dateISO(b.date);return (da?da.getTime():0)-(db?db.getTime():0)});
+ es.forEach(function(e){
+  var amt=(e.type==='maal'||e.type==='opening')?e.amount:-e.amount;run+=amt;
+  var lines=pdfWrap(pdfType(e.type)+(e.note?' - '+e.note:''),46);
+  var need=lines.length*13+4;
+  if(y-need<60){pages.push(ops);ops=[];y=supplierOps(p,ops)}
+  ops.push({x:50,y:y,z:10,s:pdfClean(e.date)});
+  lines.forEach(function(ln,li){ops.push({x:130,y:y-li*13,z:9,s:ln})});
+  ops.push({x:375,y:y,z:10,s:(amt<0?'- ':'+ ')+pdfRs(Math.abs(amt))});
+  ops.push({x:460,y:y,z:10,s:pdfRs(run)});
+  y-=lines.length*13+4;
+ });
+ ops.push({line:true,x1:50,y1:y+6,x2:545,y2:y+6});
+ ops.push({x:50,y:y-10,z:12,b:1,s:'Kul baaki: '+pdfRs(run)});
+ pages.push(ops);
+ return pages;
+}
+function buildPartyPdf(p){return pdfPages(partyPages(p))}
+function buildAllPdf(){
+ var ops=[],T=0;
+ ops.push({x:50,y:780,z:16,b:1,s:'RBH KHATA BOOK'});
+ ops.push({x:50,y:762,z:11,s:'Sabka hisaab ek saath    Nikala gaya: '+pdfClean(isoToDisp(todayISO()))});
+ ops.push({line:true,x1:50,y1:752,x2:545,y2:752});
+ var y=734;
+ PARTIES.forEach(function(p){var s=partySums(p);T+=s.b;ops.push({x:50,y:y,z:11,s:pdfClean(dname(p.name))});ops.push({x:400,y:y,z:11,b:1,s:pdfRs(s.b)});y-=18});
+ ops.push({line:true,x1:50,y1:y+8,x2:545,y2:y+8});
+ ops.push({x:50,y:y-10,z:13,b:1,s:'TOTAL Baaki: '+pdfRs(T)});
+ ops.push({x:50,y:y-30,z:8.5,s:pdfClean('App record Oct 2026 se aaj tak | Har supplier ka poora hisaab aage ke pages mein.')});
+ var pages=[ops];
+ PARTIES.forEach(function(p){partyPages(p).forEach(function(pg){pages.push(pg)})});
+ return pdfPages(pages);
+}
+function dlPdf(text,name){
+ var blob=new Blob([text],{type:'application/pdf'});var u=URL.createObjectURL(blob);
+ var a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();
+ setTimeout(function(){try{URL.revokeObjectURL(u);a.remove()}catch(x){}},5000);
+}
+
+/* ===== Full backup: master + phone entries, same PIN encryption ===== */
+function u2b(s){var b=atob(s),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}
+function buildFullBackup(cb){
+ var raw;try{raw=localStorage.getItem('rbh_k')}catch(x){}
+ if(!raw)return cb(null);
+ var payload={u:isoToDisp(todayISO()),p:PARTIES.map(function(p){return{name:p.name,short:p.short,phone:p.phone,entries:p.entries.filter(function(e){return!e.local}).map(function(e){var o={date:e.date,type:e.type,amount:e.amount,note:e.note};if(e.id)o.id=e.id;return o})}}),local:locals()};
+ var iv=crypto.getRandomValues(new Uint8Array(12));
+ var rawKey=u2b(raw);
+ crypto.subtle.importKey('raw',rawKey,'AES-GCM',false,['encrypt']).then(function(k){
+  return crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,new TextEncoder().encode(JSON.stringify(payload))).then(function(ct){
+   var b=function(a){var s='';var u=new Uint8Array(a);for(var i=0;i<u.length;i++)s+=String.fromCharCode(u[i]);return btoa(s)};
+   cb({format:'RBH-KHATA-ENCRYPTED-BACKUP',version:1,createdAt:new Date().toISOString(),salt:BLOB.s,iterations:300000,iv:b(iv),ciphertext:b(ct)});
+  });
+ }).catch(function(){cb(null)});
+}
+function dlFullBackup(){buildFullBackup(function(o){if(!o)return;var blob=new Blob([JSON.stringify(o,null,1)],{type:'application/json'});var u=URL.createObjectURL(blob);var a=document.createElement('a');a.href=u;a.download='RBH-khata-backup-'+todayISO()+'.json';document.body.appendChild(a);a.click();setTimeout(function(){try{URL.revokeObjectURL(u);a.remove()}catch(x){}},5000)})}
+
+function injectPdfButtons(){
+ document.querySelectorAll('details.party').forEach(function(d,i){
+  if(!d.querySelector('[data-se-pdf]')){var b=document.createElement('button');b.type='button';b.className='btn';b.setAttribute('data-se-pdf',i);
+  b.textContent=t('Full statement PDF','पूरा हिसाब PDF');b.style.marginTop='6px';d.appendChild(b)}
+  var card=d.closest('.card'),wrow=card?card.querySelector('.wrow'):null;
+  if(wrow&&!card.querySelector('[data-se-entry]')){var eb=document.createElement('button');eb.type='button';eb.className='btn';eb.setAttribute('data-se-entry',i);
+  eb.textContent=t('+ New entry','+ नई एंट्री');wrow.insertBefore(eb,wrow.firstChild)}
+  else if(!wrow&&!d.querySelector('[data-se-entry]')){var eb2=document.createElement('button');eb2.type='button';eb2.className='btn';eb2.setAttribute('data-se-entry',i);eb2.textContent=t('+ New entry','+ नई एंट्री');eb2.style.marginTop='6px';d.appendChild(eb2)}
+ });
+ var ba=document.querySelector('.backup-actions');
+ if(ba&&!document.getElementById('seAllPdf')){
+  var ab=document.createElement('button');ab.type='button';ab.className='btn';ab.id='seAllPdf';
+  ab.textContent=t('All suppliers PDF (one file)','सबका हिसाब PDF (एक साथ)');ba.appendChild(ab);
+ }
+}
+document.addEventListener('click',function(ev){
+ var pb=ev.target.closest&&ev.target.closest('[data-se-pdf]');
+ if(pb){var pi=+pb.getAttribute('data-se-pdf');var p=PARTIES[pi];if(p)dlPdf(buildPartyPdf(p),'RBH-hisaab-'+pdfClean(p.short||dname(p.name)).replace(/[^A-Za-z0-9]+/g,'')+'-'+todayISO()+'.pdf');return}
+ if(ev.target.closest&&ev.target.closest('#seAllPdf')){dlPdf(buildAllPdf(),'RBH-sabka-hisaab-'+todayISO()+'.pdf');return}
+ if(ev.target.closest&&ev.target.closest('#seGBBtn')){gbNow(true);return}
+ if(ev.target.closest&&ev.target.closest('#seGBRestore')){gbRestoreDrive();return}
+ var ent=ev.target.closest&&ev.target.closest('[data-se-entry]');if(ent){FS.party=parseInt(ent.getAttribute('data-se-entry'),10)||0;FS.step='edit';render();var sc=document.getElementById('seCard');if(sc)sc.scrollIntoView();return}
+});
+/* ===== Google Drive auto backup: encrypted blob to hidden appDataFolder, gesture-chained ===== */
+var GCLIENT_ID='930855618562-vl8j0skui4dtjp83m6euiautdanmlmpc.apps.googleusercontent.com';
+var GSCOPE='https://www.googleapis.com/auth/drive.appdata';
+var GBKEY='rbh_gbackup_v1';
+var GBTEST=/[?&]synctest=1/.test(location.search);
+var GBFILE=GBTEST?'rbh-khata-backup-test.json':'rbh-khata-backup.json';
+function gbDevId(){var d=null;try{d=localStorage.getItem('rbh_device_id')}catch(x){}
+ if(!d){d='d'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);try{localStorage.setItem('rbh_device_id',d)}catch(x){}}
+ return d}
+function gbSideName(){return GBTEST?('rbh-khata-device-test-'+gbDevId()+'.json'):('rbh-khata-device-'+gbDevId()+'.json')}
+var gTok=null,gTokExp=0,gBusy=false;
+function gbState(){try{return JSON.parse(localStorage.getItem(GBKEY)||'{}')}catch(x){return {}}}
+function gbSet(s){try{localStorage.setItem(GBKEY,JSON.stringify(s))}catch(x){}}
+function gbMarkPending(){var s=gbState();s.pending=true;gbSet(s);gbStatusRender()}
+function gisLoad(cb){if(window.google&&google.accounts&&google.accounts.oauth2)return cb(true);var sc=document.createElement('script');sc.src='https://accounts.google.com/gsi/client';sc.onload=function(){cb(true)};sc.onerror=function(){cb(false)};document.head.appendChild(sc)}
+function gbToken(withPrompt,cb){
+ if(gTok&&Date.now()<gTokExp)return cb(gTok);
+ gisLoad(function(ok){if(!ok)return cb(null);
+  try{
+   var tc=google.accounts.oauth2.initTokenClient({client_id:GCLIENT_ID,scope:GSCOPE,callback:function(r){if(r&&r.access_token){gTok=r.access_token;gTokExp=Date.now()+45*60*1000;cb(gTok)}else cb(null)},error_callback:function(){cb(null)}});
+   tc.requestAccessToken({prompt:withPrompt?'consent':''});
+  }catch(x){cb(null)}
+ });
+}
+function gbKey(cb){
+ var raw;try{raw=localStorage.getItem('rbh_k')}catch(x){}
+ if(!raw)return cb(null);
+ crypto.subtle.importKey('raw',u2b(raw),'AES-GCM',false,['decrypt']).then(function(k){cb(k)}).catch(function(){cb(null)});
+}
+function gbDecrypt(o,cb){
+ if(!o||o.format!=='RBH-KHATA-ENCRYPTED-BACKUP')return cb(null,'format');
+ gbKey(function(k){
+  if(!k)return cb(null,'locked');
+  crypto.subtle.decrypt({name:'AES-GCM',iv:u2b(o.iv)},k,u2b(o.ciphertext)).then(function(buf){
+   var D;try{D=JSON.parse(new TextDecoder().decode(buf))}catch(x){return cb(null,'format')}
+   cb(D);
+  }).catch(function(){cb(null,'decrypt')});
+ });
+}
+function gbFindName(tok,name,cb){
+ fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q='+encodeURIComponent("name='"+name+"'")+'&fields=files(id,name)',{headers:{Authorization:'Bearer '+tok}}).then(function(r){return r.json()}).then(function(list){cb((list.files||[])[0]||null)}).catch(function(){cb(null,'net')});
+}
+/* every snapshot this mode can read: the shared main file plus every phone's own file (single writer each) */
+function gbListAll(tok,cb){
+ var q="name='"+GBFILE+"' or name contains 'rbh-khata-device-'";
+ fetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q='+encodeURIComponent(q)+'&fields=files(id,name)&pageSize=100',{headers:{Authorization:'Bearer '+tok}}).then(function(r){return r.json()}).then(function(list){
+  var fs=(list.files||[]).filter(function(f){
+   if(f.name===GBFILE)return true;
+   if(GBTEST)return f.name.indexOf('rbh-khata-device-test-')===0;
+   return f.name.indexOf('rbh-khata-device-')===0&&f.name.indexOf('-test-')<0;
+  });
+  cb(fs);
+ }).catch(function(){cb(null,'net')});
+}
+/* pull every snapshot and merge; saves merged rows as it goes. cb({adds,ids,keys}, err) */
+function gbPullAll(tok,cb){
+ gbListAll(tok,function(files,err){
+  if(err)return cb(null,err);
+  var adds=[],ids={},keys={},i=0;
+  if(!files.length)return cb({adds:adds,ids:ids,keys:keys});
+  (function next(){
+   if(i>=files.length)return cb({adds:adds,ids:ids,keys:keys});
+   gbDownload(tok,files[i++],function(D){
+    if(D){
+     (D.p||[]).forEach(function(p){(p.entries||[]).forEach(function(e){if(e.id)ids['id:'+e.id]=1;keys[ck(p.name,e)]=1})});
+     (D.local||[]).forEach(function(le){if(le.id)ids['id:'+le.id]=1;keys[ck(le.party,le)]=1});
+     var a=mergePayload(D);if(a.length){saveLocals(locals().concat(a));adds=adds.concat(a)}
+    }
+    next();
+   });
+  })();
+ });
+}
+function gbDownload(tok,f,cb){
+ fetch('https://www.googleapis.com/drive/v3/files/'+f.id+'?alt=media',{headers:{Authorization:'Bearer '+tok}}).then(function(r){
+  if(!r.ok)return cb(null,'http'+r.status);
+  return r.json();
+ }).then(function(o){if(o===undefined)return;gbDecrypt(o,function(D,derr){cb(D,derr)})}).catch(function(){cb(null,'net')});
+}
+function gbWrite(tok,id,name,payload,cb){
+ var body=JSON.stringify(payload);
+ var meta=id?{name:name}:{name:name,parents:['appDataFolder'],mimeType:'application/json'};
+ var bd='xxrbhbk'+Date.now();
+ var mp='--'+bd+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify(meta)+'\r\n--'+bd+'\r\nContent-Type: application/json\r\n\r\n'+body+'\r\n--'+bd+'--';
+ fetch(id?('https://www.googleapis.com/upload/drive/v3/files/'+id+'?uploadType=multipart'):'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:id?'PATCH':'POST',headers:{Authorization:'Bearer '+tok,'Content-Type':'multipart/related; boundary='+bd},body:mp}).then(function(r){cb(!!(r&&r.ok),r&&r.ok?null:('http'+(r?r.status:'')))}).catch(function(){cb(false,'net')});
+}
+function gbUpload(cb){
+ gbToken(false,function(tok){
+  if(!tok)return cb(false,'token');
+  buildFullBackup(function(payload){
+   if(!payload)return cb(false,'locked');
+   /* 1) this phone's own snapshot file: only this phone ever writes it, so no other device can clobber it */
+   var sn=gbSideName();
+   gbFindName(tok,sn,function(sf){
+    gbWrite(tok,sf?sf.id:null,sn,payload,function(ok1,e1){
+     if(!ok1)return cb(false,e1||'net');
+     /* 2) pull every snapshot in Drive so this phone heals rows it is missing */
+     gbPullAll(tok,function(){
+      /* 3) merge-write the shared main file (best effort; the per-phone files are the safety net) */
+      gbFindName(tok,GBFILE,function(f,ferr){
+       var go=function(){buildFullBackup(function(p2){if(!p2)return cb(true,'mainpending');gbWrite(tok,f?f.id:null,GBFILE,p2,function(ok2){cb(true,ok2?null:'mainpending')})})};
+       if(!f)return go();
+       gbDownload(tok,f,function(D,derr){
+        if(derr||!D)return cb(false,'conflict');
+        var add=mergePayload(D);if(add.length)saveLocals(locals().concat(add));
+        go();
+       });
+      });
+     });
+    });
+   });
+  });
+ });
+}
+function gbRestoreDrive(){
+ rMsg(t('Getting the backup from Google Drive...','Google Drive से बैकअप ला रहे हैं...'));
+ gbToken(true,function(tok){
+  if(!tok)return rMsg(t('Google sign-in failed - try again.','Google साइन-इन नहीं हुआ - दोबारा कोशिश करें।'));
+  gbPullAll(tok,function(res,err){
+   if(err)return rMsg(t('Network problem - try again.','नेटवर्क दिक्कत - दोबारा कोशिश करें।'));
+   var add=res.adds;
+   if(!add.length)return rMsg(t('Backup ki sab entries yahan maujood hain. Kuch naya nahi joda.','बैकअप की सब एंट्री यहां मौजूद हैं। कुछ नया नहीं जोड़ा।'));
+   rMsg(add.length+t(' entries Google backup se jodi gayi. Page reload ho raha hai.',' एंट्री Google बैकअप से जोड़ी गई। पेज रीलोड हो रहा है।'));
+   setTimeout(function(){location.reload()},1500);
+  });
+ });
+}
+function gbNow(fromTap){
+ if(gBusy)return; gBusy=true; gbStatusRender();
+ gbUpload(function(ok,why){
+  gBusy=false;
+  if(ok){gbSet({at:new Date().toISOString(),pending:false,warn:why==='mainpending'?'main':'',checked:new Date().toISOString()});gbStatusRender();return}
+  var s=gbState();s.pending=true;s.err=why||'';gbSet(s);gbStatusRender();
+  if(why==='token'&&fromTap){gbToken(true,function(t2){if(t2){gBusy=false;gbNow(false)}})}
+ });
+}
+function gbStatusRender(){
+ var el=document.getElementById('seGBStatus');if(!el)return;
+ var s=gbState();
+ if(gBusy){el.textContent=t('Backing up to Google...','Google बैकअप हो रहा है...');el.style.color='#666';return}
+ if(s.pending&&s.err==='conflict'){el.textContent=t('Google backup: old backup uses a different PIN/key - NOT overwritten. Tell Jadoo.','Google बैकअप: पुराना बैकअप अलग PIN/की का है - ओवरराइट नहीं किया। Jadoo को बताएं।');el.style.color='#b3261e';return}
+ if(s.pending){el.textContent=t('Google backup: PENDING - new entries are on this phone only - tap the button below','Google बैकअप: बाकी है - नई एंट्री अभी सिर्फ इस फोन पर है - नीचे बटन दबाएं');el.style.color='#b3261e';return}
+ if(s.at){var d=new Date(s.at);el.textContent=t('Google backup: saved to Google ','Google बैकअप: Google पर सेव ')+'('+d.toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})+')'+(s.warn==='main'?t(' - shared copy refreshes on next backup',' - साझा कॉपी अगले बैकअप में अपडेट होगी'):'');el.style.color='#1a7f37';return}
+ if(s.checked){var d2=new Date(s.checked);el.textContent=t('Google backup: connected, checked ','Google बैकअप: जुड़ा है, जांचा ')+'('+d2.toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})+')'+t(' - nothing new to save',' - सेव करने को नया कुछ नहीं');el.style.color='#666';return}
+ el.textContent=t('Google backup: never done yet - tap the button below','Google बैकअप: अभी तक नहीं हुआ - नीचे बटन दबाएं');el.style.color='#666';
+}
+/* initial paint: base render ran before this script loaded, so kick one render to inject the new UI. Never on the PIN lock screen - a fresh device must see the lock, not an empty ledger. */
+try{if(!document.getElementById('lf'))render()}catch(x){}
+/* silent sync on open: pull rows other devices backed up. No popup ever here; if Google is not connected on this phone, nothing happens. */
+setTimeout(function(){
+ gbToken(false,function(tok){
+  if(!tok)return;
+  gbPullAll(tok,function(res,err){
+   if(err||!res)return;
+   var add=res.adds;
+   var missing=locals().filter(function(le){return !((le.id&&res.ids['id:'+le.id])||res.keys[ck(le.party,le)])});
+   var s=gbState();s.checked=new Date().toISOString();gbSet(s);gbStatusRender();
+   if(add.length){try{render()}catch(x){}rMsg(add.length+t(' entry(s) added from the other phone backup.',' एंट्री दूसरे फोन के बैकअप से जोड़ी गई।'))}
+   if(missing.length){gbUpload(function(){})}
+  });
+ });
+},2000);
+window.__sePdf={party:buildPartyPdf,all:buildAllPdf,backup:buildFullBackup};
+})();
+</script>
+</body></html>
