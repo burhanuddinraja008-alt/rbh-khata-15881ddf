@@ -200,7 +200,7 @@ function applyLocal(){
   ls.forEach(function(le){
    if(le.party!==p.name)return;
    if(le.id){sIds[le.id]=(sIds[le.id]||0)+1;if((mIds[le.id]||0)>=sIds[le.id])return}
-   else{var k0=ck(p.name,le);sKeys[k0]=(sKeys[k0]||0)+1;if((mKeys[k0]||0)>=sKeys[k0])return}
+   var k0=ck(p.name,le);sKeys[k0]=(sKeys[k0]||0)+1;if((mKeys[k0]||0)>=sKeys[k0])return;
    p.entries.push({id:le.id,date:le.date,type:le.type,amount:le.amount,note:le.note,local:true,restored:!!le.restored});
   });
  });
@@ -210,7 +210,7 @@ var _render=window.render;
 window.render=function(){applyLocal();_render();fixFooter();injectUI()};
 function fixFooter(){
  var ver=document.querySelector('.ver');if(!ver)return;
- ver.innerHTML='v24 · <a href="#" id="lk">'+t('Lock','लॉक')+'</a> · <a href="#" id="lg">'+(HI?'English':'हिंदी')+'</a>';
+ ver.innerHTML='v25 · <a href="#" id="lk">'+t('Lock','लॉक')+'</a> · <a href="#" id="lg">'+(HI?'English':'हिंदी')+'</a>';
  var lk2=document.getElementById('lk');if(lk2)lk2.addEventListener('click',function(e){e.preventDefault();try{localStorage.removeItem('rbh_k')}catch(x){}location.reload()});
  var lg2=document.getElementById('lg');if(lg2)lg2.addEventListener('click',function(e){e.preventDefault();try{localStorage.setItem('rbh_lang',HI?'en':'hi')}catch(x){}location.reload()});
 }
