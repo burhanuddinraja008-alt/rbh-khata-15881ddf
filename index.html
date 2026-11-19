@@ -210,7 +210,7 @@ var _render=window.render;
 window.render=function(){applyLocal();_render();fixFooter();injectUI()};
 function fixFooter(){
  var ver=document.querySelector('.ver');if(!ver)return;
- ver.innerHTML='v26 · <a href="#" id="lk">'+t('Lock','लॉक')+'</a> · <a href="#" id="lg">'+(HI?'English':'हिंदी')+'</a>';
+ ver.innerHTML='v27 · <a href="#" id="lk">'+t('Lock','लॉक')+'</a> · <a href="#" id="lg">'+(HI?'English':'हिंदी')+'</a>';
  var lk2=document.getElementById('lk');if(lk2)lk2.addEventListener('click',function(e){e.preventDefault();try{localStorage.removeItem('rbh_k')}catch(x){}location.reload()});
  var lg2=document.getElementById('lg');if(lg2)lg2.addEventListener('click',function(e){e.preventDefault();try{localStorage.setItem('rbh_lang',HI?'en':'hi')}catch(x){}location.reload()});
 }
@@ -563,8 +563,8 @@ function gbStatusRender(){
  if(s.at){var d=new Date(s.at);el.textContent=t('Google backup: done ','Google बैकअप: हो गया ')+'('+d.toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})+')';el.style.color='#1a7f37';return}
  el.textContent=t('Google backup: never done yet - tap the button below','Google बैकअप: अभी तक नहीं हुआ - नीचे बटन दबाएं');el.style.color='#666';
 }
-/* initial paint: base render ran before this script loaded, so kick one render to inject the new UI */
-try{render()}catch(x){}
+/* initial paint: base render ran before this script loaded, so kick one render to inject the new UI. Never on the PIN lock screen - a fresh device must see the lock, not an empty ledger. */
+try{if(!document.getElementById('lf'))render()}catch(x){}
 /* silent sync on open: pull rows other devices backed up. No popup ever here; if Google is not connected on this phone, nothing happens. */
 setTimeout(function(){
  gbToken(false,function(tok){
