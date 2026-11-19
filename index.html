@@ -187,10 +187,10 @@ function t(en,hi){return HI?hi:en}
 var MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 function todayISO(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function isoToDisp(v){var m=String(v||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!m)return '';return (+m[3])+' '+MN[+m[2]-1]+' '+m[1]}
-TR.seUndo=t('Hatayein','हटाएं');TR.seLocal=t('is phone par','इस फोन पर');TR.seRestored=t('backup se restore','बैकअप से रिस्टोर');
+TR.seUndo=t('Hatayein','हटाएं');TR.seLocal=t('on this phone','इस फोन पर');TR.seRestored=t('restored from backup','बैकअप से रिस्टोर');
 TR.backupNote2=t('Backup is encrypted with the existing PIN and includes the salt needed for future recovery. Use Restore below to bring missing entries back onto this phone. CSV is readable financial data, so store it privately.','बैकअप मौजूदा PIN से एन्क्रिप्टेड है और भविष्य की रिकवरी के लिए जरूरी जानकारी रखता है। नीचे Restore से गायब entries इस फोन पर वापस आ जाएंगी। CSV पढ़ने योग्य है, इसे निजी रखें।');
 var FS={party:0,kind:'maal',amount:'',note:'',date:todayISO(),step:'edit'};
-function kindLabel(k){return k==='maal'?t('MAAL AAYA (purchase)','माल आया (खरीद)'):k==='payment'?t('PAYMENT DIYA','पेमेंट दिया'):t('KATA (adjustment)','कटौती (एडजस्टमेंट)')}
+function kindLabel(k){return k==='maal'?t('GOODS RECEIVED (purchase)','माल आया (खरीद)'):k==='payment'?t('PAYMENT MADE','पेमेंट दिया'):t('ADJUSTMENT (kata)','कटौती (एडजस्टमेंट)')}
 function applyLocal(){
  var ls=locals();if(!ls.length)return;
  PARTIES.forEach(function(p){
@@ -210,7 +210,7 @@ var _render=window.render;
 window.render=function(){applyLocal();_render();fixFooter();injectUI()};
 function fixFooter(){
  var ver=document.querySelector('.ver');if(!ver)return;
- ver.innerHTML='v25 · <a href="#" id="lk">'+t('Lock','लॉक')+'</a> · <a href="#" id="lg">'+(HI?'English':'हिंदी')+'</a>';
+ ver.innerHTML='v26 · <a href="#" id="lk">'+t('Lock','लॉक')+'</a> · <a href="#" id="lg">'+(HI?'English':'हिंदी')+'</a>';
  var lk2=document.getElementById('lk');if(lk2)lk2.addEventListener('click',function(e){e.preventDefault();try{localStorage.removeItem('rbh_k')}catch(x){}location.reload()});
  var lg2=document.getElementById('lg');if(lg2)lg2.addEventListener('click',function(e){e.preventDefault();try{localStorage.setItem('rbh_lang',HI?'en':'hi')}catch(x){}location.reload()});
 }
@@ -220,34 +220,34 @@ function injectUI(){
  var hv=document.getElementById('homeView');if(!hv||document.getElementById('seCard'))return;
  var card=document.createElement('section');card.className='feature se-card';card.id='seCard';
  var ls=locals();
- var h='<h2>'+t('Nayi entry (khud hisaab)','नई एंट्री (खुद हिसाब)')+'</h2>';
+ var h='<h2>'+t('New entry (add yourself)','नई एंट्री (खुद हिसाब)')+'</h2>';
  h+='<p class="feature-note">'+t('Add a purchase, payment or adjustment yourself. Totals update at once. Entries save on this phone first; send the update to Jadoo or keep a backup so the master khata matches.','खरीद, पेमेंट या कटौती खुद जोड़ें। कुल तुरंत अपडेट होगा। एंट्री पहले इस फोन पर सेव होती है; मास्टर खाता मिलान के लिए Jadoo को अपडेट भेजें या बैकअप रखें।')+'</p>';
- if(ls.length)h+='<p class="se-banner">'+ls.length+t(' entry(s) abhi sirf is phone par hain.',' एंट्री अभी सिर्फ इस फोन पर हैं।')+'</p>';
+ if(ls.length)h+='<p class="se-banner">'+ls.length+t(' entry(s) are only on this phone so far.',' एंट्री अभी सिर्फ इस फोन पर हैं।')+'</p>';
  if(FS.step==='edit'){
   h+='<label for="seParty">'+t('Supplier','सप्लायर')+'</label><select id="seParty">'+PARTIES.map(function(p,i){return '<option value="'+i+'"'+(i===FS.party?' selected':'')+'>'+esc(dname(p.name))+'</option>'}).join('')+'</select>';
   h+='<div class="se-kinds">'+['maal','payment','kata'].map(function(k){return '<button type="button" class="btn se-kind'+(FS.kind===k?' active':'')+'" data-se-kind="'+k+'">'+kindLabel(k)+'</button>'}).join('')+'</div>';
   h+='<div class="filter-row"><input id="seAmt" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="'+t('Amount ₹','रकम ₹')+'" value="'+esc(FS.amount)+'" autocomplete="off"><input id="seDate" type="date" value="'+esc(FS.date)+'"></div>';
-  h+='<input id="seNote" type="text" placeholder="'+t('Note - item, qty, rate (jaise: sports sandal 6 pair @260)','नोट - आइटम, संख्या, रेट')+'" value="'+esc(FS.note)+'" autocomplete="off">';
-  if(FS.kind==='payment'){var av=afterVals();if(av&&av.b>0)h+='<button type="button" class="btn se-full" id="seFull">'+t('Poora balance ','पूरा बैलेंस ')+inr(av.b)+'</button>'}
+  h+='<input id="seNote" type="text" placeholder="'+t('Note - item, qty, rate (e.g. sports sandal 6 pair @260)','नोट - आइटम, संख्या, रेट')+'" value="'+esc(FS.note)+'" autocomplete="off">';
+  if(FS.kind==='payment'){var av=afterVals();if(av&&av.b>0)h+='<button type="button" class="btn se-full" id="seFull">'+t('Full balance ','पूरा बैलेंस ')+inr(av.b)+'</button>'}
   h+='<p class="se-preview" id="sePrev"></p><p class="amsg" id="seMsg" hidden></p>';
-  h+='<button type="button" class="btn se-go" id="seNext">'+t('Aage badhein','आगे बढ़ें')+'</button>';
+  h+='<button type="button" class="btn se-go" id="seNext">'+t('Next','आगे बढ़ें')+'</button>';
  }else{
   var av=afterVals();
-  h+='<div class="se-confirm"><p><b>'+t('Entry check karein:','एंट्री जांचें:')+'</b></p><p>'+esc(dname(av.p.name))+' · '+kindLabel(FS.kind)+' · '+inr(av.n)+' · '+esc(isoToDisp(FS.date))+'</p>'+(FS.note?'<p>'+esc(FS.note)+'</p>':'')+'<p>'+t('Entry ke baad balance: ','एंट्री के बाद बैलेंस: ')+inr(av.nb)+' · '+t('Total payable: ','कुल बाकी: ')+inr(av.T)+'</p></div>';
-  h+='<p class="amsg" id="seMsg" hidden></p><div class="se-kinds"><button type="button" class="btn se-go" id="seSave">'+t('Save karein','सेव करें')+'</button><button type="button" class="btn" id="seBack">'+t('Wapas','वापस')+'</button></div>';
+  h+='<div class="se-confirm"><p><b>'+t('Check the entry:','एंट्री जांचें:')+'</b></p><p>'+esc(dname(av.p.name))+' · '+kindLabel(FS.kind)+' · '+inr(av.n)+' · '+esc(isoToDisp(FS.date))+'</p>'+(FS.note?'<p>'+esc(FS.note)+'</p>':'')+'<p>'+t('Balance after entry: ','एंट्री के बाद बैलेंस: ')+inr(av.nb)+' · '+t('Total payable: ','कुल बाकी: ')+inr(av.T)+'</p></div>';
+  h+='<p class="amsg" id="seMsg" hidden></p><div class="se-kinds"><button type="button" class="btn se-go" id="seSave">'+t('Save','सेव करें')+'</button><button type="button" class="btn" id="seBack">'+t('Back','वापस')+'</button></div>';
  }
- if(ls.length)h+='<p class="next-help"><a href="#" id="seSend">'+t('Jadoo ko update bhejo (WhatsApp)','Jadoo को अपडेट भेजें (WhatsApp)')+'</a> · '+t('saaf text, koi automatic send nahi','साफ टेक्स्ट, कोई अपने-आप सेंड नहीं')+'</p>';
+ if(ls.length)h+='<p class="next-help"><a href="#" id="seSend">'+t('Send update to Jadoo (WhatsApp)','Jadoo को अपडेट भेजें (WhatsApp)')+'</a> · '+t('plain text, nothing is sent automatically','साफ टेक्स्ट, कोई अपने-आप सेंड नहीं')+'</p>';
  card.innerHTML=h;
  var pv=hv.querySelector('.backup-feature');hv.insertBefore(card,pv);
  var ba=hv.querySelector('.backup-actions');
  if(ba&&!document.getElementById('seRestoreBtn')){
   var rb=document.createElement('button');rb.type='button';rb.className='btn';rb.id='seRestoreBtn';rb.textContent=t('Restore from backup','बैकअप से वापस लाएं');ba.appendChild(rb);
   var fi=document.createElement('input');fi.type='file';fi.id='seRestoreFile';fi.accept='.json,application/json';fi.hidden=true;ba.appendChild(fi);
-  var fb=document.createElement('button');fb.type='button';fb.className='btn';fb.id='seFullBackup';fb.textContent=t('Full backup (phone entries samet)','फुल बैकअप (फोन एंट्री सहित)');ba.appendChild(fb);
+  var fb=document.createElement('button');fb.type='button';fb.className='btn';fb.id='seFullBackup';fb.textContent=t('Full backup (incl. phone entries)','फुल बैकअप (फोन एंट्री सहित)');ba.appendChild(fb);
   var gl=document.createElement('p');gl.className='feature-note';gl.id='seGBStatus';ba.appendChild(gl);
-  var gb=document.createElement('button');gb.type='button';gb.className='btn';gb.id='seGBBtn';gb.textContent=t('Google backup abhi karein','Google बैकअप अभी करें');ba.appendChild(gb);
-  var gr=document.createElement('button');gr.type='button';gr.className='btn';gr.id='seGBRestore';gr.textContent=t('Google Drive se restore','Google ड्राइव से रिस्टोर');ba.appendChild(gr);
-  var gn=document.createElement('p');gn.className='feature-note';gn.textContent=t('Encrypted backup aapke Google Drive ke hidden app folder mein save hota hai. Sirf backup file, koi hisaab Google ko nahi dikhta. Save ke baad apne-aap try karta hai; na ho toh yahan PENDING dikhega.','एन्क्रिप्टेड बैकअप आपके Google Drive के हिडन ऐप फोल्डर में सेव होता है।');ba.appendChild(gn);
+  var gb=document.createElement('button');gb.type='button';gb.className='btn';gb.id='seGBBtn';gb.textContent=t('Back up to Google now','Google बैकअप अभी करें');ba.appendChild(gb);
+  var gr=document.createElement('button');gr.type='button';gr.className='btn';gr.id='seGBRestore';gr.textContent=t('Restore from Google Drive','Google ड्राइव से रिस्टोर');ba.appendChild(gr);
+  var gn=document.createElement('p');gn.className='feature-note';gn.textContent=t('The encrypted backup is saved in the hidden app folder of your Google Drive - only the backup file, Google cannot see the hisaab. It retries by itself; if it fails, PENDING shows here.','एन्क्रिप्टेड बैकअप आपके Google Drive के हिडन ऐप फोल्डर में सेव होता है।');ba.appendChild(gn);
   setTimeout(gbStatusRender,0);
  }
  updPrev();
@@ -255,7 +255,7 @@ function injectUI(){
 }
 function updPrev(){
  var el=document.getElementById('sePrev');if(!el)return;var av=afterVals();if(!av){el.textContent='';return}
- el.textContent=av.n>0?(t('Entry ke baad: ','एंट्री के बाद: ')+esc(dname(av.p.name))+' '+inr(av.nb)+' · '+t('Total ','कुल ')+inr(av.T)):(t('Abhi balance: ','अभी बैलेंस: ')+esc(dname(av.p.name))+' '+inr(av.b));
+ el.textContent=av.n>0?(t('After entry: ','एंट्री के बाद: ')+esc(dname(av.p.name))+' '+inr(av.nb)+' · '+t('Total ','कुल ')+inr(av.T)):(t('Balance now: ','अभी बैलेंस: ')+esc(dname(av.p.name))+' '+inr(av.b));
 }
 document.addEventListener('input',function(ev){if(!ev.target)return;if(ev.target.id==='seAmt'){FS.amount=ev.target.value.replace(/[^\d]/g,'');updPrev()}if(ev.target.id==='seNote')FS.note=ev.target.value});
 document.addEventListener('change',function(ev){if(!ev.target)return;
@@ -270,8 +270,8 @@ document.addEventListener('click',function(ev){
   var av2=afterVals();var m=document.getElementById('seMsg');
   function bad2(s){if(m){m.textContent=s;m.hidden=false}}
   if(!av2||av2.n<1)return bad2(t('Enter an amount greater than ₹0','₹0 से ज्यादा रकम डालें'));
-  if(FS.kind!=='maal'&&av2.n>av2.b)return bad2(t('Payment/adjustment balance (','पेमेंट/कटौती बैलेंस (')+inr(av2.b)+t(') se zyada nahi ho sakti',') से ज्यादा नहीं हो सकती'));
-  if(!isoToDisp(FS.date))return bad2(t('Date check karein','तारीख जांचें'));
+  if(FS.kind!=='maal'&&av2.n>av2.b)return bad2(t('Balance after payment/adjustment (','पेमेंट/कटौती बैलेंस (')+inr(av2.b)+t(') - cannot be more',') से ज्यादा नहीं हो सकती'));
+  if(!isoToDisp(FS.date))return bad2(t('Check the date','तारीख जांचें'));
   FS.step='confirm';render();return}
  if(ev.target.closest&&ev.target.closest('#seBack')){FS.step='edit';render();return}
  if(ev.target.closest&&ev.target.closest('#seSave')){
@@ -282,7 +282,7 @@ document.addEventListener('click',function(ev){
   gbUpload(function(){location.reload()});setTimeout(function(){location.reload()},12000);return}
  var un=ev.target.closest&&ev.target.closest('[data-se-undo]');if(un){
   var id=un.getAttribute('data-se-undo');
-  if(un.getAttribute('data-arm')!=='1'){un.setAttribute('data-arm','1');un.textContent=t('Pakka? Dobara dabayein','पक्का? दोबारा दबाएं');setTimeout(function(){try{un.setAttribute('data-arm','0');un.textContent=t('Hatayein','हटाएं')}catch(x){}},4000);return}
+  if(un.getAttribute('data-arm')!=='1'){un.setAttribute('data-arm','1');un.textContent=t('Sure? Tap again to confirm','पक्का? दोबारा दबाएं');setTimeout(function(){try{un.setAttribute('data-arm','0');un.textContent=t('Hatayein','हटाएं')}catch(x){}},4000);return}
   saveLocals(locals().filter(function(x){return x.id!==id}));location.reload();return}
  var sd=ev.target.closest&&ev.target.closest('#seSend');if(sd){
   ev.preventDefault();
@@ -320,22 +320,22 @@ function rMsg(m){var el=document.getElementById('seRestoreMsg');if(!el){var ba=d
 var restoring=false;
 function doRestore(file){
  if(restoring)return;restoring=true;
- rMsg(t('Backup khul raha hai...','बैकअप खुल रहा है...'));
+ rMsg(t('Opening backup...','बैकअप खुल रहा है...'));
  var rd=new FileReader();
  rd.onload=function(){
-  var o;try{o=JSON.parse(rd.result)}catch(x){restoring=false;return rMsg(t('File samajh nahi aayi.','फाइल समझ नहीं आई।'))}
-  if(!o||o.format!=='RBH-KHATA-ENCRYPTED-BACKUP'){restoring=false;return rMsg(t('Yeh RBH backup file nahi hai.','यह RBH बैकअप फाइल नहीं है।'))}
+  var o;try{o=JSON.parse(rd.result)}catch(x){restoring=false;return rMsg(t('Could not read that file.','फाइल समझ नहीं आई।'))}
+  if(!o||o.format!=='RBH-KHATA-ENCRYPTED-BACKUP'){restoring=false;return rMsg(t('This is not an RBH backup file.','यह RBH बैकअप फाइल नहीं है।'))}
   var raw;try{raw=localStorage.getItem('rbh_k')}catch(x){}
-  if(!raw){restoring=false;return rMsg(t('Pehle app PIN se kholein, phir restore karein.','पहले ऐप PIN से खोलें, फिर रिस्टोर करें।'))}
+  if(!raw){restoring=false;return rMsg(t('Unlock the app with the PIN first, then restore.','पहले ऐप PIN से खोलें, फिर रिस्टोर करें।'))}
   var keyP=Promise.resolve(b2u(raw));
   keyP.then(function(rawKey){return crypto.subtle.importKey('raw',rawKey,'AES-GCM',false,['decrypt']).then(function(k){return crypto.subtle.decrypt({name:'AES-GCM',iv:b2u(o.iv)},k,b2u(o.ciphertext))})}).then(function(buf){
    var D=JSON.parse(new TextDecoder().decode(buf));
    var add=mergePayload(D);
    if(!add.length){restoring=false;rMsg(t('Backup ki sab entries yahan maujood hain. Kuch naya nahi joda.','बैकअप की सब एंट्री यहां मौजूद हैं। कुछ नया नहीं जोड़ा।'));return}
    saveLocals(locals().concat(add));gbMarkPending();
-   rMsg(add.length+t(' entries backup se jodi gayi. Page reload ho raha hai.',' एंट्री बैकअप से जोड़ी गई। पेज रीलोड हो रहा है।'));
+   rMsg(add.length+t(' entries added from backup. Reloading.',' एंट्री बैकअप से जोड़ी गई। पेज रीलोड हो रहा है।'));
    setTimeout(function(){location.reload()},1500);
-  }).catch(function(){restoring=false;rMsg(t('Backup nahi khula - file check karein.','बैकअप नहीं खुला - फाइल जांचें।'))});
+  }).catch(function(){restoring=false;rMsg(t('Backup did not open - check the file.','बैकअप नहीं खुला - फाइल जांचें।'))});
  };
  rd.readAsText(file);
 }
@@ -440,16 +440,17 @@ function dlFullBackup(){buildFullBackup(function(o){if(!o)return;var blob=new Bl
 
 function injectPdfButtons(){
  document.querySelectorAll('details.party').forEach(function(d,i){
-  if(d.querySelector('[data-se-pdf]'))return;
-  var b=document.createElement('button');b.type='button';b.className='btn';b.setAttribute('data-se-pdf',i);
-  b.textContent=t('Poora hisaab PDF','पूरा हिसाब PDF');b.style.marginTop='6px';d.appendChild(b);
-  var eb=document.createElement('button');eb.type='button';eb.className='btn';eb.setAttribute('data-se-entry',i);
-  eb.textContent=t('+ Nayi entry','+ नई एंट्री');eb.style.marginTop='6px';d.appendChild(eb);
+  if(!d.querySelector('[data-se-pdf]')){var b=document.createElement('button');b.type='button';b.className='btn';b.setAttribute('data-se-pdf',i);
+  b.textContent=t('Full statement PDF','पूरा हिसाब PDF');b.style.marginTop='6px';d.appendChild(b)}
+  var card=d.closest('.card'),wrow=card?card.querySelector('.wrow'):null;
+  if(wrow&&!card.querySelector('[data-se-entry]')){var eb=document.createElement('button');eb.type='button';eb.className='btn';eb.setAttribute('data-se-entry',i);
+  eb.textContent=t('+ New entry','+ नई एंट्री');wrow.insertBefore(eb,wrow.firstChild)}
+  else if(!wrow&&!d.querySelector('[data-se-entry]')){var eb2=document.createElement('button');eb2.type='button';eb2.className='btn';eb2.setAttribute('data-se-entry',i);eb2.textContent=t('+ New entry','+ नई एंट्री');eb2.style.marginTop='6px';d.appendChild(eb2)}
  });
  var ba=document.querySelector('.backup-actions');
  if(ba&&!document.getElementById('seAllPdf')){
   var ab=document.createElement('button');ab.type='button';ab.className='btn';ab.id='seAllPdf';
-  ab.textContent=t('Sabka hisaab PDF (ek saath)','सबका हिसाब PDF (एक साथ)');ba.appendChild(ab);
+  ab.textContent=t('All suppliers PDF (one file)','सबका हिसाब PDF (एक साथ)');ba.appendChild(ab);
  }
 }
 document.addEventListener('click',function(ev){
@@ -527,14 +528,14 @@ function gbUpload(cb){
  });
 }
 function gbRestoreDrive(){
- rMsg(t('Google Drive se backup la rahe hain...','Google Drive से बैकअप ला रहे हैं...'));
+ rMsg(t('Getting the backup from Google Drive...','Google Drive से बैकअप ला रहे हैं...'));
  gbToken(true,function(tok){
-  if(!tok)return rMsg(t('Google sign-in nahi hua - dobara koshish karein.','Google साइन-इन नहीं हुआ - दोबारा कोशिश करें।'));
+  if(!tok)return rMsg(t('Google sign-in failed - try again.','Google साइन-इन नहीं हुआ - दोबारा कोशिश करें।'));
   gbFind(tok,function(f,ferr){
-   if(ferr)return rMsg(t('Network dikkat - dobara koshish karein.','नेटवर्क दिक्कत - दोबारा कोशिश करें।'));
-   if(!f)return rMsg(t('Google Drive mein koi RBH backup nahi mila.','Google Drive में कोई RBH बैकअप नहीं मिला।'));
+   if(ferr)return rMsg(t('Network problem - try again.','नेटवर्क दिक्कत - दोबारा कोशिश करें।'));
+   if(!f)return rMsg(t('No RBH backup found in Google Drive.','Google Drive में कोई RBH बैकअप नहीं मिला।'));
    gbDownload(tok,f,function(D,derr){
-    if(derr||!D)return rMsg(t('Backup nahi khula - PIN alag lag rahi hai.','बैकअप नहीं खुला - PIN अलग लग रही है।'));
+    if(derr||!D)return rMsg(t('Backup did not open - PIN seems different.','बैकअप नहीं खुला - PIN अलग लग रही है।'));
     var add=mergePayload(D);
     if(!add.length)return rMsg(t('Backup ki sab entries yahan maujood hain. Kuch naya nahi joda.','बैकअप की सब एंट्री यहां मौजूद हैं। कुछ नया नहीं जोड़ा।'));
     saveLocals(locals().concat(add));gbMarkPending();
@@ -556,11 +557,11 @@ function gbNow(fromTap){
 function gbStatusRender(){
  var el=document.getElementById('seGBStatus');if(!el)return;
  var s=gbState();
- if(gBusy){el.textContent=t('Google backup ho raha hai...','Google बैकअप हो रहा है...');el.style.color='#666';return}
- if(s.pending&&s.err==='conflict'){el.textContent=t('Google backup: purana backup alag PIN/key ka hai - OVERWRITE nahi kiya. Jadoo ko batayein.','Google बैकअप: पुराना बैकअप अलग PIN/की का है - ओवरराइट नहीं किया। Jadoo को बताएं।');el.style.color='#b3261e';return}
- if(s.pending){el.textContent=t('Google backup: PENDING - neeche button dabayein','Google बैकअप: बाकी है - नीचे बटन दबाएं');el.style.color='#b3261e';return}
- if(s.at){var d=new Date(s.at);el.textContent=t('Google backup: ho gaya ','Google बैकअप: हो गया ')+'('+d.toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})+')';el.style.color='#1a7f37';return}
- el.textContent=t('Google backup: abhi kabhi nahi hua - neeche button dabayein','Google बैकअप: अभी तक नहीं हुआ - नीचे बटन दबाएं');el.style.color='#666';
+ if(gBusy){el.textContent=t('Backing up to Google...','Google बैकअप हो रहा है...');el.style.color='#666';return}
+ if(s.pending&&s.err==='conflict'){el.textContent=t('Google backup: old backup uses a different PIN/key - NOT overwritten. Tell Jadoo.','Google बैकअप: पुराना बैकअप अलग PIN/की का है - ओवरराइट नहीं किया। Jadoo को बताएं।');el.style.color='#b3261e';return}
+ if(s.pending){el.textContent=t('Google backup: PENDING - tap the button below','Google बैकअप: बाकी है - नीचे बटन दबाएं');el.style.color='#b3261e';return}
+ if(s.at){var d=new Date(s.at);el.textContent=t('Google backup: done ','Google बैकअप: हो गया ')+'('+d.toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})+')';el.style.color='#1a7f37';return}
+ el.textContent=t('Google backup: never done yet - tap the button below','Google बैकअप: अभी तक नहीं हुआ - नीचे बटन दबाएं');el.style.color='#666';
 }
 /* initial paint: base render ran before this script loaded, so kick one render to inject the new UI */
 try{render()}catch(x){}
@@ -577,7 +578,7 @@ setTimeout(function(){
     (D.p||[]).forEach(function(p){(p.entries||[]).forEach(function(e){if(e.id)dIds[e.id]=1;dKeys[ck(p.name,e)]=1})});
     (D.local||[]).forEach(function(le){if(le.id)dIds[le.id]=1;dKeys[ck(le.party,le)]=1});
     var missing=locals().filter(function(le){return !((le.id&&dIds[le.id])||dKeys[ck(le.party,le)])});
-    if(add.length){saveLocals(locals().concat(add));try{render()}catch(x){}rMsg(add.length+t(' entry(s) doosre phone ke backup se jodi gayi.',' एंट्री दूसरे फोन के बैकअप से जोड़ी गई।'))}
+    if(add.length){saveLocals(locals().concat(add));try{render()}catch(x){}rMsg(add.length+t(' entry(s) added from the other phone backup.',' एंट्री दूसरे फोन के बैकअप से जोड़ी गई।'))}
     if(missing.length){gbUpload(function(){})}
    });
   });
